@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { upload } from "@vercel/blob/client";
+import { uploadPresigned } from "@vercel/blob/client";
 
 /** 이미지 칸: 파일을 Vercel Blob에 올리거나, 이미 있는 이미지 주소를 붙여 넣는다 */
 export function ImageField({ id, value, onChange, folder, token }: {
@@ -20,8 +20,12 @@ export function ImageField({ id, value, onChange, folder, token }: {
     setError("");
     setProgress(0);
     try {
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "-");
-      const blob = await upload(`${folder}/${safeName}`, file, {
+      // 추측할 수 없는 파일 이름: 원래 이름 + 무작위 문자열
+      const dot = file.name.lastIndexOf(".");
+      const base = (dot > 0 ? file.name.slice(0, dot) : file.name).replace(/[^a-zA-Z0-9_-]+/g, "-").slice(0, 40) || "image";
+      const ext = dot > 0 ? file.name.slice(dot).toLowerCase() : "";
+      const rand = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
+      const blob = await uploadPresigned(`${folder}/${base}-${rand}${ext}`, file, {
         access: "public",
         handleUploadUrl: "/api/upload",
         headers: { authorization: `Bearer ${await token()}` },
