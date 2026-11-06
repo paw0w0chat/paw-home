@@ -21,6 +21,14 @@ export function AdminConsole({ user, onLogout }: { user: User; onLogout: () => v
   const [loaded, setLoaded] = useState(false);
   const [sectionId, setSectionId] = useState<SectionId>("personas");
   const [status, setStatus] = useState("");
+  const [toast, setToast] = useState<{ text: string; kind: "ok" | "error"; key: number } | null>(null);
+
+  /** 화면 아래 알림 (2.5초 뒤 사라짐) */
+  const notify = useCallback((text: string, kind: "ok" | "error" = "ok") => {
+    const key = Date.now();
+    setToast({ text, kind, key });
+    window.setTimeout(() => setToast((t) => (t?.key === key ? null : t)), 2500);
+  }, []);
 
   const token = useCallback(() => user.getIdToken(), [user]);
 
@@ -42,10 +50,11 @@ export function AdminConsole({ user, onLogout }: { user: User; onLogout: () => v
 
   /** 저장 후 사이트 캐시 갱신 */
   const publish = useCallback(async (message: string) => {
+    notify(message);
     setStatus(`${message} · 사이트 반영 중…`);
     const res = await fetch("/api/revalidate", { method: "POST", headers: { authorization: `Bearer ${await token()}` } });
     setStatus(res.ok ? `${message} · 사이트에 반영됐어요` : `${message} · 사이트 반영 실패(잠시 후 자동 반영)`);
-  }, [token]);
+  }, [token, notify]);
 
   const isEmpty = loaded && COLLECTIONS.every((c) => store[c].length === 0);
 
@@ -63,7 +72,7 @@ export function AdminConsole({ user, onLogout }: { user: User; onLogout: () => v
     batch.set(doc(db, ...PROFILE_DOC), seed.profile);
     await batch.commit();
     await load();
-    await publish("기본 데이터를 넣었어요");
+    await publish("기본 데이터를 가져왔습니다");
   };
 
   const section = SECTIONS.find((s) => s.id === sectionId);
@@ -94,12 +103,18 @@ export function AdminConsole({ user, onLogout }: { user: User; onLogout: () => v
           ) : null}
 
           {!loaded ? <p className="empty">불러오는 중…</p> : sectionId === "profile" ? (
-            <ProfileEditor onSaved={publish} />
+            <ProfileEditor onSaved={publish} notify={notify} />
           ) : section ? (
-            <CollectionEditor key={section.id} section={section} store={store} reload={load} publish={publish} token={token} />
+            <CollectionEditor key={section.id} section={section} store={store} reload={load} publish={publish} notify={notify} token={token} />
           ) : null}
         </div>
       </div>
+
+      {toast ? (
+        <div key={toast.key} className={`admin-toast${toast.kind === "error" ? " is-error" : ""}`} role="status" aria-live="polite">
+          {toast.text}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -135,11 +150,12 @@ function rowToDraft(section: Section, row: Row): Draft {
   return { id: row.id, isNew: false, isPublic: row.isPublic, order: String(row.order), values };
 }
 
-function CollectionEditor({ section, store, reload, publish, token }: {
+function CollectionEditor({ section, store, reload, publish, notify, token }: {
   section: Section;
   store: Store;
   reload: () => Promise<void>;
   publish: (m: string) => Promise<void>;
+  notify: (m: string, kind?: "ok" | "error") => void;
   token: () => Promise<string>;
 }) {
   const rows = store[section.id];
@@ -166,7 +182,10 @@ function CollectionEditor({ section, store, reload, publish, token }: {
   const save = async () => {
     setError("");
     const missing = section.fields.filter((f) => f.required && !draft.values[f.key]?.trim());
-    if (missing.length) return setError(`필수 항목을 채워주세요: ${missing.map((f) => f.label).join(", ")}`);
+    if (missing.length) {
+      notify("필수 항목을 채워주세요", "error");
+      return setError(`필수 항목을 채워주세요: ${missing.map((f) => f.label).join(", ")}`);
+    }
 
     let id = draft.id;
     if (draft.isNew) {
@@ -183,8 +202,9 @@ function CollectionEditor({ section, store, reload, publish, token }: {
       await setDoc(doc(getDb(), section.id, id), data);
       await reload();
       setDraft((d) => ({ ...d, id, isNew: false }));
-      await publish("저장했어요");
+      await publish("저장되었습니다");
     } catch (e) {
+      notify("저장하지 못했어요", "error");
       setError(`저장 실패: ${(e as Error).message}`);
     } finally {
       setBusy(false);
@@ -199,7 +219,7 @@ function CollectionEditor({ section, store, reload, publish, token }: {
       await deleteDoc(doc(getDb(), section.id, draft.id));
       await reload();
       setDraft(emptyDraft(section, rows.filter((r) => r.id !== draft.id)));
-      await publish("삭제했어요");
+      await publish("삭제되었습니다");
     } finally {
       setBusy(false);
     }
@@ -209,7 +229,7 @@ function CollectionEditor({ section, store, reload, publish, token }: {
     await updateDoc(doc(getDb(), section.id, row.id), { isPublic: !row.isPublic });
     await reload();
     if (row.id === draft.id) setDraft((d) => ({ ...d, isPublic: !row.isPublic }));
-    await publish(`${label(row, section.titleKeys)} ${row.isPublic ? "비공개" : "공개"}로 바꿨어요`);
+    await publish(`${label(row, section.titleKeys)} — ${row.isPublic ? "비공개" : "공개"}로 바뀌었습니다`);
   };
 
   return (
@@ -303,7 +323,7 @@ function FormRow({ id, label, hint, children }: { id: string; label: string; hin
 
 // ───────────────── 프로필 편집 ─────────────────
 
-function ProfileEditor({ onSaved }: { onSaved: (m: string) => Promise<void> }) {
+function ProfileEditor({ onSaved, notify }: { onSaved: (m: string) => Promise<void>; notify: (m: string, kind?: "ok" | "error") => void }) {
   const [intro, setIntro] = useState("");
   const [careers, setCareers] = useState("");
   const [links, setLinks] = useState("");
@@ -333,7 +353,9 @@ function ProfileEditor({ onSaved }: { onSaved: (m: string) => Promise<void> }) {
     };
     try {
       await setDoc(doc(getDb(), ...PROFILE_DOC), profile);
-      await onSaved("프로필을 저장했어요");
+      await onSaved("저장되었습니다");
+    } catch (e) {
+      notify(`저장하지 못했어요: ${(e as Error).message}`, "error");
     } finally {
       setBusy(false);
     }
