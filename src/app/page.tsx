@@ -3,6 +3,9 @@ import { getGroups, getProfile, getRecentPersonas, getRecentWorks } from "@/lib/
 import { PersonaCard, SectionHead, WorksTable } from "@/components/Blocks";
 import { Barcode, Star } from "@/components/Ornaments";
 
+// 관리자 저장 시 즉시 갱신되고, 그 외에는 5분마다 다시 읽는다
+export const revalidate = 300;
+
 export default async function HomePage() {
   const [profile, personas, works, worlds] = await Promise.all([
     getProfile(),

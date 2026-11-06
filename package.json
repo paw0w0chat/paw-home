@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.2",
+    "firebase": "^13.2.0",
+    "jose": "^6.2.15",
     "next": "16.4.5",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@types/node": "^22",

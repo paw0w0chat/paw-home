@@ -1,0 +1,32 @@
+rules_version = '2';
+
+// PAWCAT 아카이브 보안 규칙
+// - 누구나: 공개(isPublic == true) 항목만 읽기
+// - 관리자: 전부 읽기 · 쓰기
+// 관리자 이메일을 바꾸려면 아래 isAdmin()의 주소를 고치고 콘솔에서 다시 게시하세요.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() == "ADMIN_EMAIL_HERE";
+    }
+
+    function isContent(col) {
+      return col in ["groups", "personas", "dreams", "works", "prompts"];
+    }
+
+    // 프로필: 누구나 읽기, 관리자만 쓰기
+    match /site/profile {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /{col}/{id} {
+      allow read: if isAdmin() || (isContent(col) && resource.data.isPublic == true);
+      allow write: if isAdmin() && isContent(col);
+    }
+  }
+}

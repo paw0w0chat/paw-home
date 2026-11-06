@@ -24,9 +24,16 @@ npm run build   # 배포용 빌드 확인
 | `src/data/seed.ts` | 초기 데이터 (Firebase 연결 전까지 사용) |
 | `src/app/globals.css` | 색 · 서체 · 컴포넌트 스타일 |
 
-## 다음 단계
+| `src/app/admin` | 관리자 페이지 (Google 로그인, 관리자 이메일만 통과) |
+| `src/app/api` | 업로드 토큰 발급, 관리자 확인, 저장 후 캐시 갱신 |
+| `firestore.rules` | Firestore 보안 규칙 원본 (관리자 이메일은 콘솔에서 채움) |
 
-1. Vercel에 이 저장소 연결
-2. Firebase 프로젝트 생성 → Firestore · Storage · Authentication(Google)
-3. `src/lib/content.ts`를 Firestore 조회로 교체, 시드 데이터 이관
-4. `/admin` 관리자 페이지 (본인 Google 계정만 접근)
+## 데이터 흐름
+
+- Firebase 환경변수가 있으면 Firestore에서 **공개 항목만** 읽고, 없으면 `seed.ts`를 쓴다.
+- 관리자 페이지에서 저장하면 `/api/revalidate`가 캐시를 지워 바로 반영된다. 그 외에는 5분마다 갱신.
+- 이미지는 브라우저에서 Vercel Blob으로 바로 올라간다. 업로드 토큰은 관리자 ID 토큰을 확인한 뒤에만 발급.
+
+## 환경변수
+
+`.env.example` 참고. Vercel 프로젝트 → Settings → Environment Variables에 넣는다.

@@ -1,11 +1,52 @@
 // 페이지가 데이터를 가져오는 단일 창구.
-// 지금은 시드 데이터를 읽고, Firebase 연결 단계에서 이 파일만 Firestore 조회로 바꾼다.
+// Firebase 환경변수가 있으면 Firestore에서 공개 항목만 읽고, 없으면 시드 데이터를 쓴다.
 
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import * as seed from "@/data/seed";
-import type { Dream, DreamStatus, Group, Persona, Work } from "@/lib/types";
+import { getDb, isFirebaseConfigured, PROFILE_DOC, type CollectionName } from "@/lib/firebase";
+import type { Dream, DreamStatus, Group, Persona, Profile, Prompt, Work } from "@/lib/types";
 
-const visible = <T extends { isPublic: boolean; order: number }>(items: T[]) =>
-  items.filter((i) => i.isPublic).sort((a, b) => a.order - b.order);
+type Visible = { id: string; isPublic: boolean; order: number };
+
+const byOrder = <T extends { order: number }>(items: T[]) => items.slice().sort((a, b) => a.order - b.order);
+
+const SEED: Record<CollectionName, Visible[]> = {
+  groups: seed.groups,
+  personas: seed.personas,
+  dreams: seed.dreams,
+  works: seed.works,
+  prompts: seed.prompts,
+};
+
+/** 공개 항목 전체 (order 오름차순) */
+async function list<T extends Visible>(name: CollectionName): Promise<T[]> {
+  if (!isFirebaseConfigured) {
+    return byOrder((SEED[name] as T[]).filter((i) => i.isPublic));
+  }
+  try {
+    const snap = await getDocs(query(collection(getDb(), name), where("isPublic", "==", true)));
+    return byOrder(snap.docs.map((d) => ({ ...(d.data() as Omit<T, "id">), id: d.id }) as T));
+  } catch (err) {
+    console.error(`[content] ${name} 읽기 실패`, err);
+    return [];
+  }
+}
+
+/** 공개 항목 하나. 비공개거나 없으면 undefined */
+async function one<T extends Visible>(name: CollectionName, id: string): Promise<T | undefined> {
+  if (!isFirebaseConfigured) {
+    return (SEED[name] as T[]).find((i) => i.id === id && i.isPublic);
+  }
+  try {
+    const snap = await getDoc(doc(getDb(), name, id));
+    if (!snap.exists()) return undefined;
+    const data = { ...(snap.data() as Omit<T, "id">), id: snap.id } as T;
+    return data.isPublic ? data : undefined;
+  } catch {
+    // 비공개 문서는 보안 규칙에 막혀 permission-denied가 난다
+    return undefined;
+  }
+}
 
 export const DREAM_STATUS_LABEL: Record<DreamStatus, string> = {
   dating: "연애 중",
@@ -14,47 +55,48 @@ export const DREAM_STATUS_LABEL: Record<DreamStatus, string> = {
   open: "OPEN",
 };
 
-export async function getProfile() {
-  return seed.profile;
+export async function getProfile(): Promise<Profile> {
+  if (!isFirebaseConfigured) return seed.profile;
+  try {
+    const snap = await getDoc(doc(getDb(), ...PROFILE_DOC));
+    return snap.exists() ? { ...seed.profile, ...(snap.data() as Partial<Profile>) } : seed.profile;
+  } catch {
+    return seed.profile;
+  }
 }
 
 export async function getGroups(type?: Group["type"]) {
-  const all = visible(seed.groups);
+  const all = await list<Group>("groups");
   return type ? all.filter((g) => g.type === type) : all;
 }
 
-export async function getGroup(id: string) {
-  return seed.groups.find((g) => g.id === id && g.isPublic);
-}
+export const getGroup = (id: string) => one<Group>("groups", id);
 
-export async function getPersonas() {
-  return visible(seed.personas);
-}
+export const getPersonas = () => list<Persona>("personas");
 
 /** 최근 추가된 순 (order가 큰 것부터) */
 export async function getRecentPersonas(limit: number) {
-  return (await getPersonas()).slice().reverse().slice(0, limit);
+  return (await getPersonas()).reverse().slice(0, limit);
 }
 
-export async function getPersona(id: string): Promise<Persona | undefined> {
-  return seed.personas.find((p) => p.id === id && p.isPublic);
-}
+export const getPersona = (id: string) => one<Persona>("personas", id);
 
-export async function getDreams() {
-  return visible(seed.dreams);
-}
+export const getDreams = () => list<Dream>("dreams");
 
 export async function getDreamsByPersona(personaId: string): Promise<Dream[]> {
   return (await getDreams()).filter((d) => d.personaId === personaId);
 }
 
-export async function getWorks() {
-  return visible(seed.works).reverse();
+/** 최신 작품부터 */
+export async function getWorks(): Promise<Work[]> {
+  return (await list<Work>("works")).reverse();
 }
 
 export async function getRecentWorks(limit: number): Promise<Work[]> {
   return (await getWorks()).slice(0, limit);
 }
+
+export const getPrompts = () => list<Prompt>("prompts");
 
 /** 화면에 보이는 번호 (P-001, D-001 …) */
 export const serial = (prefix: string, n: number) => `${prefix}-${String(n).padStart(3, "0")}`;
