@@ -348,7 +348,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
   /* ---------- build repeated parts ---------- */
   function chk(label,key,sm){const e=document.createElement('span');e.className='chk'+(sm?' sm':'');e.setAttribute('role','checkbox');e.setAttribute('aria-checked','false');e.tabIndex=0;e.dataset.k=key;e.innerHTML='<span class="box"><i></i></span>';e.append(label);return e;}
   function pill(label,key){const e=document.createElement('span');e.className='pill';e.setAttribute('role','checkbox');e.setAttribute('aria-checked','false');e.tabIndex=0;e.dataset.k=key;e.textContent=label;return e;}
-  const groups={branch:['US','KOREA'],line:['올림포스','티탄','타르타로스','프로토게노이','크세노스'],pos:['SENTINEL','GUIDE','기타'],ctype:['BL','HL','GL','NL','기타']};
+  const groups={branch:['US','KOREA'],line:['올림포스','티탄','타르타로스','프로토게노이','크세노스','외신'],pos:['SENTINEL','GUIDE','기타'],ctype:['BL','HL','GL','NL','기타']};
   for(const [g,list] of Object.entries(groups)){const box=document.querySelector(`[data-group="${g}"]`);const first=box.firstChild;list.forEach((l,i)=>box.insertBefore(chk(l,g+'-'+i),g==='pos'?first:null));}
   const openBox=document.querySelector('[data-group="open"]');['전체 오픈','일부 오픈','비공개','캐릭터마다'].forEach((l,i)=>openBox.append(pill(l,'open-'+i)));
   const typeBox=document.querySelector('[data-group="type"]');['마음','RT','멘션','일상','앓이','짤뽑','맞팔'].forEach((l,i)=>typeBox.appendChild(pill(l,'type-'+i)));
