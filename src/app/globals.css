@@ -265,3 +265,14 @@ textarea.admin-input { resize: vertical; }
   margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink);
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
+
+/* ── work links ── */
+.work-links { display: flex; gap: 12px; align-items: flex-start; border-top: var(--line-thin); padding: 10px 14px; }
+.work-links .label { width: 64px; flex: none; padding-top: 12px; }
+.work-links-row { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.work-link {
+  min-height: 40px; display: inline-flex; align-items: center; gap: 6px; padding: 0 12px;
+  background: var(--ink); color: var(--offwhite); text-decoration: none;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+}
+.work-link:hover { background: var(--signal); color: var(--ink); }

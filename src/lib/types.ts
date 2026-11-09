@@ -61,6 +61,8 @@ export type Dream = Visibility & {
   characterImage?: string;
 };
 
+export type WorkLink = { label: string; url: string };
+
 /** 출시 작품 (works 컬렉션) */
 export type Work = Visibility & {
   id: string;
@@ -71,6 +73,9 @@ export type Work = Visibility & {
   genre: string[] | string;
   platform: string[] | string;
   releasedAt: string;
+  /** 캐릭터를 올린 사이트들 (여러 개) */
+  links?: WorkLink[];
+  /** 예전 단일 링크 (links가 없을 때만 사용) */
   url?: string;
   thumbnail?: string;
 };

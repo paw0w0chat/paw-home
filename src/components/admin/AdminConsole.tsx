@@ -163,7 +163,12 @@ function emptyDraft(section: Section, rows: Row[]): Draft {
 
 function rowToDraft(section: Section, row: Row): Draft {
   const values: Record<string, string> = {};
-  for (const f of section.fields) values[f.key] = toForm(f, row[f.key]);
+  for (const f of section.fields) {
+    let v = row[f.key];
+    // 예전 단일 링크(url)를 새 링크 목록으로 옮겨서 보여준다
+    if (f.type === "links" && v === undefined && typeof row.url === "string" && row.url) v = [{ label: "링크", url: row.url }];
+    values[f.key] = toForm(f, v);
+  }
   return { id: row.id, isNew: false, isPublic: row.isPublic, order: String(row.order), values };
 }
 

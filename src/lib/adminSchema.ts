@@ -11,7 +11,8 @@ export type FieldType =
   | "image"
   | "stats" // "LABEL: 값" 한 줄에 하나 → StatRow[]
   | "meta" // "LABEL: 값" 한 줄 → StatRow
-  | "tags"; // 쉼표로 구분 → string[]
+  | "tags" // 쉼표로 구분 → string[]
+  | "links"; // "이름 | 주소" 한 줄에 하나 → { label, url }[]
 
 export type OptionSource = "groups" | "groups:world" | "groups:work" | "personas";
 
@@ -48,7 +49,7 @@ export const SECTIONS: Section[] = [
       { key: "genre", label: "장르", type: "tags", hint: "여러 개면 쉼표로 구분", placeholder: "로맨스, 현대판타지" },
       { key: "platform", label: "플랫폼", type: "tags", hint: "여러 개면 쉼표로 구분", placeholder: "제타, 크랙" },
       { key: "releasedAt", label: "출시일", type: "text", placeholder: "2026-11-06" },
-      { key: "url", label: "작품 링크", type: "text", placeholder: "https://" },
+      { key: "links", label: "캐릭터 링크", type: "links", hint: "한 줄에 하나씩 `사이트 이름 | 주소`. 여러 사이트면 여러 줄로", placeholder: "크랙 | https://crack.wrtn.ai/...\n케이브덕 | https://caveduck.io/..." },
       { key: "thumbnail", label: "썸네일 (1:1)", type: "image", hint: "작품 목록에 정사각형으로 잘려서 보여요" },
     ],
   },
@@ -150,6 +151,8 @@ export function toForm(field: Field, value: unknown): string {
     }
     case "tags":
       return Array.isArray(value) ? value.join(", ") : String(value);
+    case "links":
+      return (value as { label: string; url: string }[]).map((l) => `${l.label} | ${l.url}`).join("\n");
     default:
       return String(value);
   }
@@ -163,10 +166,39 @@ export function fromForm(field: Field, text: string): unknown {
       return text.trim() ? parseLine(text) : { label: "", value: "" };
     case "tags":
       return text.split(",").map((t) => t.trim().replace(/^#/, "")).filter(Boolean);
+    case "links":
+      return parseLinks(text);
     case "number":
       return Number(text) || 0;
     default:
       return text.trim();
+  }
+}
+
+/**
+ * "이름 | 주소" 줄들을 링크 목록으로. 주소만 있으면 사이트 주소에서 이름을 만든다.
+ * 보안: http(s) 주소만 받는다 (javascript: 같은 주소는 버림)
+ */
+export function parseLinks(text: string): { label: string; url: string }[] {
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const bar = line.lastIndexOf("|");
+      const label = bar >= 0 ? line.slice(0, bar).trim() : "";
+      const url = (bar >= 0 ? line.slice(bar + 1) : line).trim();
+      return { label, url };
+    })
+    .filter((l) => /^https?:\/\//i.test(l.url))
+    .map((l) => ({ label: l.label || hostLabel(l.url), url: l.url }));
+}
+
+function hostLabel(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "링크";
   }
 }
 

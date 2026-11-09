@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Group, Persona, Work } from "@/lib/types";
+import type { Group, Persona, Work, WorkLink } from "@/lib/types";
 import { serial } from "@/lib/content";
 import { Barcode, Star } from "./Ornaments";
 
@@ -72,7 +72,14 @@ function Pills({ items }: { items: string[] }) {
   );
 }
 
+/** 새 links 목록, 없으면 예전 url 하나. http(s)만 */
+function workLinks(work: Work): WorkLink[] {
+  const list = work.links?.length ? work.links : work.url ? [{ label: "바로가기", url: work.url }] : [];
+  return list.filter((l) => /^https?:\/\//i.test(l.url));
+}
+
 export function WorkCard({ work, isNew = false }: { work: Work; isNew?: boolean }) {
+  const links = workLinks(work);
   const body = (
     <>
       <div className="card-top" style={{ alignItems: "center" }}>
@@ -89,17 +96,25 @@ export function WorkCard({ work, isNew = false }: { work: Work; isNew?: boolean 
       <div className="card-meta" style={{ alignItems: "flex-start" }}><span className="label" style={{ paddingTop: 5 }}>GENRE</span><Pills items={asList(work.genre)} /></div>
       <div className="card-meta" style={{ alignItems: "flex-start" }}><span className="label" style={{ paddingTop: 5 }}>PLATFORM</span><Pills items={asList(work.platform)} /></div>
       <div className="card-meta"><span className="label">RELEASED</span><span className="mono" style={{ fontSize: 12 }}>{work.releasedAt}</span></div>
+      {links.length > 0 ? (
+        <div className="work-links">
+          <span className="label">PLAY</span>
+          <span className="work-links-row">
+            {links.map((l) => (
+              <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="work-link" aria-label={`${work.title} — ${l.label}에서 열기`}>
+                {l.label} <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </span>
+        </div>
+      ) : null}
       <div className="card-foot">
         <Barcode width={84} height={20} />
-        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>{work.url ? "PLAY →" : ""} <Star size={14} /></span>
+        <Star size={14} />
       </div>
     </>
   );
-  return work.url ? (
-    <a href={work.url} target="_blank" rel="noreferrer" className="persona-card work-card">{body}</a>
-  ) : (
-    <article className="persona-card work-card">{body}</article>
-  );
+  return <article className="persona-card work-card">{body}</article>;
 }
 
 export function WorksGrid({ works, highlightFirst = false }: { works: Work[]; highlightFirst?: boolean }) {
