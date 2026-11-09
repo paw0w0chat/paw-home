@@ -276,3 +276,4 @@ textarea.admin-input { resize: vertical; }
   font-family: var(--font-mono); font-size: 12px; font-weight: 700;
 }
 .work-link:hover { background: var(--signal); color: var(--ink); }
+.admin-input-links { font-family: var(--font-mono); font-size: 13px; line-height: 1.7; word-break: break-all; }

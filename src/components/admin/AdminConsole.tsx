@@ -320,8 +320,16 @@ function CollectionEditor({ section, store, reload, publish, notify, token }: {
                   </select>
                 ) : f.type === "image" ? (
                   <ImageField id={`f-${f.key}`} value={draft.values[f.key] ?? ""} onChange={(v) => set(f.key, v)} folder={section.id} token={token} />
-                ) : f.type === "textarea" || f.type === "stats" ? (
-                  <textarea id={`f-${f.key}`} className="admin-input" rows={f.type === "stats" ? 5 : 4} value={draft.values[f.key] ?? ""} onChange={(e) => set(f.key, e.target.value)} placeholder={f.placeholder} />
+                ) : f.type === "textarea" || f.type === "stats" || f.type === "links" ? (
+                  <textarea
+                    id={`f-${f.key}`}
+                    className={`admin-input${f.type === "links" ? " admin-input-links" : ""}`}
+                    rows={f.type === "textarea" ? 4 : 5}
+                    value={draft.values[f.key] ?? ""}
+                    onChange={(e) => set(f.key, e.target.value)}
+                    placeholder={f.placeholder}
+                    spellCheck={f.type === "links" ? false : undefined}
+                  />
                 ) : (
                   <input id={`f-${f.key}`} className="admin-input" value={draft.values[f.key] ?? ""} onChange={(e) => set(f.key, e.target.value)} placeholder={f.placeholder} />
                 )}
