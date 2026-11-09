@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getWorks } from "@/lib/content";
-import { WorksTable } from "@/components/Blocks";
+import { WorksGrid } from "@/components/Blocks";
 
 // 관리자 저장 시 즉시 갱신되고, 그 외에는 5분마다 다시 읽는다
 export const revalidate = 300;
@@ -19,7 +19,7 @@ export default async function WorksPage() {
         <div className="page-count">TITLES<span className="display">{String(works.length).padStart(2, "0")}</span></div>
       </section>
       <div style={{ paddingTop: 24 }}>
-        <WorksTable works={works} highlightFirst />
+        <WorksGrid works={works} highlightFirst />
       </div>
     </div>
   );

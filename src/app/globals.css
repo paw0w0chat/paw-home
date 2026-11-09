@@ -160,7 +160,7 @@ img { max-width: 100%; display: block; }
 .img-frame.tall { flex: 1.3 1 240px; }
 .img-frame .card-top { border-bottom: var(--line); }
 .img-slot { display: flex; align-items: center; justify-content: center; background: repeating-linear-gradient(135deg, var(--paper) 0 10px, var(--offwhite) 10px 20px); font-family: var(--font-mono); font-size: 12px; color: var(--graphite); overflow: hidden; }
-.img-slot img { width: 100%; height: 100%; object-fit: cover; }
+.img-slot img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .img-frame figcaption { padding: 8px 12px; border-top: var(--line); font-size: 13px; }
 .detail-info { flex: 1.2 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
 .detail-name { display: flex; flex-direction: column; gap: 8px; border-bottom: var(--line); padding-bottom: 20px; }
@@ -186,7 +186,7 @@ img { max-width: 100%; display: block; }
 .dream-card { background: var(--offwhite); border: var(--line); display: flex; flex-direction: column; }
 .dream-pair { display: flex; align-items: center; gap: 12px; padding: 16px 14px; }
 .dream-thumb { width: 88px; height: 88px; flex: none; border: var(--line); background: repeating-linear-gradient(135deg, var(--paper) 0 8px, var(--offwhite) 8px 16px); display: flex; align-items: flex-end; padding: 4px; font-family: var(--font-mono); font-size: 10px; color: var(--graphite); overflow: hidden; }
-.dream-thumb img { width: 100%; height: 100%; object-fit: cover; margin: -4px; width: calc(100% + 8px); height: calc(100% + 8px); }
+.dream-thumb img { object-fit: cover; object-position: center top; margin: -4px; width: calc(100% + 8px); height: calc(100% + 8px); }
 
 /* ── footer ── */
 .site-footer { border-top: var(--line); margin-top: 72px; }
@@ -228,7 +228,7 @@ textarea.admin-input { resize: vertical; }
 .admin-error { margin: 0; color: #a3200f; font-size: 13px; font-weight: 500; }
 .admin-image { display: flex; gap: 12px; align-items: flex-start; border: 1.5px dashed var(--ink); padding: 10px; }
 .admin-image-preview { width: 72px; height: 72px; flex: none; border: var(--line-thin); background: repeating-linear-gradient(135deg, var(--paper) 0 6px, #fff 6px 12px); overflow: hidden; }
-.admin-image-preview img { width: 100%; height: 100%; object-fit: cover; }
+.admin-image-preview img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 
 /* ── admin toast ── */
 .admin-toast {
@@ -245,13 +245,15 @@ textarea.admin-input { resize: vertical; }
 @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @media (prefers-reduced-motion: reduce) { .admin-toast { animation: none; } }
 
-/* ── works thumbnail ── */
-.work-thumb {
-  width: 72px; height: 72px; display: flex; align-items: center; justify-content: center;
-  border: var(--line); overflow: hidden; text-decoration: none;
-  background: repeating-linear-gradient(135deg, var(--paper) 0 6px, var(--offwhite) 6px 12px);
-  font-family: var(--font-mono); font-size: 9px; color: var(--graphite);
+/* ── works cards ── */
+.work-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.work-card { min-height: 0; }
+.work-cover {
+  aspect-ratio: 1 / 1; border-bottom: var(--line); overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: repeating-linear-gradient(135deg, var(--paper) 0 10px, var(--offwhite) 10px 20px);
+  font-family: var(--font-mono); font-size: 12px; color: var(--graphite);
 }
-.work-thumb img { width: 100%; height: 100%; object-fit: cover; }
-a.work-thumb:hover img { filter: grayscale(1) contrast(1.1); }
+/* 얼굴이 잘 보이도록 위쪽 기준으로 자른다 */
+.work-cover img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

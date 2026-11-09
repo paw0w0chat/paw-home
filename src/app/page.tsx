@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getGroups, getProfile, getRecentPersonas, getRecentWorks } from "@/lib/content";
-import { PersonaCard, SectionHead, WorksTable } from "@/components/Blocks";
+import { PersonaCard, SectionHead, WorksGrid } from "@/components/Blocks";
 import { Barcode, Star } from "@/components/Ornaments";
 
 // 관리자 저장 시 즉시 갱신되고, 그 외에는 5분마다 다시 읽는다
@@ -77,7 +77,7 @@ export default async function HomePage() {
       {/* WORKS */}
       <section className="section" style={{ paddingBottom: 0 }}>
         <SectionHead title={["WORKS", "RELEASED"]} sub="AI CHAT — LATEST 03" />
-        <WorksTable works={works} highlightFirst />
+        <WorksGrid works={works} highlightFirst />
         <div style={{ display: "flex", justifyContent: "center", paddingTop: 32 }}>
           <Link href="/works" className="btn-outline"><Star size={14} /> 더보기 / ALL WORKS →</Link>
         </div>

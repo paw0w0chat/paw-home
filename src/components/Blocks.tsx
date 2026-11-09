@@ -59,54 +59,40 @@ export function GroupHead({ code, group, count, unit }: { code: string; group: G
   );
 }
 
-function WorkThumb({ work }: { work: Work }) {
-  const img = work.thumbnail ? (
-    <img src={work.thumbnail} alt="" loading="lazy" />
-  ) : (
-    <span aria-hidden="true">NO IMG</span>
+export function WorkCard({ work, isNew = false }: { work: Work; isNew?: boolean }) {
+  const body = (
+    <>
+      <div className="card-top" style={{ alignItems: "center" }}>
+        <span>{`W-${String(work.order).padStart(2, "0")}`}</span>
+        {isNew ? <span className="tag tag-signal" style={{ border: 0, padding: "1px 8px" }}>NEW</span> : <span>AI CHAT</span>}
+      </div>
+      <div className="work-cover">
+        {work.thumbnail ? <img src={work.thumbnail} alt="" loading="lazy" /> : <span aria-hidden="true">[썸네일]</span>}
+      </div>
+      <div className="card-name" style={{ paddingBottom: 10 }}>
+        <span className="ko" style={{ fontSize: 20 }}>{work.title}</span>
+      </div>
+      <div className="card-meta"><span className="label">GENRE</span><span>{work.genre}</span></div>
+      <div className="card-meta"><span className="label">PLATFORM</span><span>{work.platform}</span></div>
+      <div className="card-meta"><span className="label">RELEASED</span><span className="mono" style={{ fontSize: 12 }}>{work.releasedAt}</span></div>
+      <div className="card-foot">
+        <Barcode width={84} height={20} />
+        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>{work.url ? "PLAY →" : ""} <Star size={14} /></span>
+      </div>
+    </>
   );
   return work.url ? (
-    <a href={work.url} target="_blank" rel="noreferrer" className="work-thumb" aria-label={`${work.title} 열기`}>{img}</a>
+    <a href={work.url} target="_blank" rel="noreferrer" className="persona-card work-card">{body}</a>
   ) : (
-    <span className="work-thumb">{img}</span>
+    <article className="persona-card work-card">{body}</article>
   );
 }
 
-export function WorksTable({ works, highlightFirst = false }: { works: Work[]; highlightFirst?: boolean }) {
+export function WorksGrid({ works, highlightFirst = false }: { works: Work[]; highlightFirst?: boolean }) {
   if (works.length === 0) return <p className="empty">아직 등록된 작품이 없어요.</p>;
   return (
-    <div className="table-wrap">
-      <table className="spec-table">
-        <thead>
-          <tr>
-            <th style={{ width: 64 }}>NO.</th>
-            <th style={{ width: 88 }}><span className="sr-only">썸네일</span></th>
-            <th>TITLE</th>
-            <th>GENRE</th>
-            <th>PLATFORM</th>
-            <th className="right">RELEASED</th>
-          </tr>
-        </thead>
-        <tbody>
-          {works.map((w, i) => (
-            <tr key={w.id}>
-              <td className="num">{`W-${String(w.order).padStart(2, "0")}`}</td>
-              <td style={{ paddingTop: 12, paddingBottom: 12 }}>
-                <WorkThumb work={w} />
-              </td>
-              <td className="title">
-                <span style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                  {w.url ? <a href={w.url} target="_blank" rel="noreferrer">{w.title}</a> : w.title}
-                  {highlightFirst && i === 0 ? <span className="tag tag-signal" style={{ border: 0 }}>NEW</span> : null}
-                </span>
-              </td>
-              <td>{w.genre}</td>
-              <td>{w.platform}</td>
-              <td className="right num">{w.releasedAt}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="work-grid">
+      {works.map((w, i) => <WorkCard key={w.id} work={w} isNew={highlightFirst && i === 0} />)}
     </div>
   );
 }
