@@ -65,6 +65,10 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
 .hd .t3{position:absolute;left:830px;top:28px;font:500 12px/1.2 var(--jost);letter-spacing:.32em;color:var(--steel)}
 .hd .tpill{position:absolute;right:0;top:15px;height:42px;display:flex;align-items:center;gap:10px;padding:0 20px 0 18px;border:1px solid rgba(238,241,243,.35);border-radius:40px;font:600 11px var(--mono);letter-spacing:.25em;color:var(--paper)}
 .hd .tpill i{width:7px;height:7px;border-radius:50%;background:var(--green);display:block}
+.hd .tpill{cursor:pointer}
+.hd .tpill .caret{font:500 11px var(--mono);letter-spacing:0;color:var(--gold-2);margin-left:-2px}
+.hd .tpill select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+.hd .tpill:focus-within{outline:2px solid var(--gold-2);outline-offset:3px}
 
 .panel{position:absolute;top:120px;height:700px;background:var(--paper);padding:26px 28px 28px;display:flex;flex-direction:column;justify-content:space-between}
 .p1{left:44px;width:456px}.p2{left:516px;width:520px}.p3{left:1052px;width:504px}
@@ -213,7 +217,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
           <div class="t1">트친소표</div>
           <div class="t2">AGENT REGISTRATION FORM</div>
           <div class="t3">UNITED STATES DIVISION&nbsp;&nbsp;·&nbsp;&nbsp;2036</div>
-          <div class="tpill"><i></i>TEAM CONSENTES</div>
+          <label class="tpill"><i></i><span id="teamName">TEAM CONSENTES</span><b class="caret" data-html2canvas-ignore aria-hidden="true">▾</b><select id="team" aria-label="팀 선택" data-html2canvas-ignore></select></label>
         </div>
 
         <!-- PANEL 01 -->
@@ -306,17 +310,38 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
   const $=s=>document.querySelector(s);
   const KEY='themis-ttsp-v1';
 
+  /* ---------- team themes ----------
+     팀마다 포인트색(accent), 진한 포인트(accent2), 팀 점(dot), 배경(bg, bg2),
+     배경 사선(stripe1, stripe2), 모서리 그늘(shade)을 바꾼다.
+     ※ CONSENTES 외 팀 색은 임시값 — 팀별 레퍼런스를 받으면 확정 */
+  const THEMES=[
+    {id:'consentes',  label:'TEAM CONSENTES',  accent:'#C2A061',accent2:'#B08D52',dot:'#5E9C7F',bg:'#0E1A23',bg2:'#13212B',stripe1:'#6E8296',stripe2:'#A9B4BF',shade:'#2A3846'},
+    {id:'council',    label:'COUNCIL',         accent:'#A897F0',accent2:'#8C7AD6',dot:'#A897F0',bg:'#110E1D',bg2:'#18142A',stripe1:'#6C628F',stripe2:'#B3AAD6',shade:'#262040'},
+    {id:'olympian',   label:'OLYMPIAN',        accent:'#E3B04B',accent2:'#C99736',dot:'#E3B04B',bg:'#12100B',bg2:'#1B1810',stripe1:'#857250',stripe2:'#CDBB8F',shade:'#2C2616'},
+    {id:'phalanx',    label:'PHALANX',         accent:'#E58A6B',accent2:'#C9704F',dot:'#E58A6B',bg:'#150F0D',bg2:'#1F1613',stripe1:'#8B685C',stripe2:'#CFAEA2',shade:'#30211C'},
+    {id:'muse',       label:'MUSE',            accent:'#E68AB0',accent2:'#C96E95',dot:'#E68AB0',bg:'#160E13',bg2:'#20151C',stripe1:'#8C6A7C',stripe2:'#D4AFC2',shade:'#31202A'},
+    {id:'vestal',     label:'VESTAL',          accent:'#D9A7B8',accent2:'#BD8A9C',dot:'#E68AB0',bg:'#141119',bg2:'#1C1823',stripe1:'#7D7186',stripe2:'#CBC0D2',shade:'#2B2633'},
+    {id:'zero',       label:'ZERO',            accent:'#E05A55',accent2:'#C2433F',dot:'#E05A55',bg:'#120D0E',bg2:'#1B1415',stripe1:'#7E5D5E',stripe2:'#C9A5A6',shade:'#2D1E1F'},
+    {id:'specter',    label:'SPECTER',         accent:'#A3A8AE',accent2:'#868C93',dot:'#A3A8AE',bg:'#0E1013',bg2:'#16191D',stripe1:'#5E646C',stripe2:'#A9AFB6',shade:'#23272D'},
+    {id:'apsu',       label:'APSU',            accent:'#E0AE52',accent2:'#C4933B',dot:'#E0AE52',bg:'#0F0E0C',bg2:'#191713',stripe1:'#7A6A4E',stripe2:'#C2AE86',shade:'#29251B'},
+    {id:'forsaken',   label:'THE FORSAKEN',    accent:'#E98763',accent2:'#CC6C49',dot:'#E98763',bg:'#110E0E',bg2:'#1A1515',stripe1:'#80625A',stripe2:'#C9A99E',shade:'#2C211F'},
+    {id:'trespassers',label:'THE TRESPASSERS', accent:'#E0524E',accent2:'#C23C38',dot:'#E0524E',bg:'#0D0D10',bg2:'#151519',stripe1:'#6B5A5E',stripe2:'#BFA6AB',shade:'#251C1F'},
+  ];
+  let theme=THEMES[0];
+
   /* ---------- background art ---------- */
-  (function bg(){
+  function bg(){
+    const t=theme;
     let g='';for(let x=48;x<1600;x+=48)g+=`M${x} 0V900`;for(let y=48;y<900;y+=48)g+=`M0 ${y}H1600`;
     let tk='';const R=560,cx=800,cy=470;
     for(let i=0;i<72;i++){const a=i*5*Math.PI/180,c=Math.cos(a),s=Math.sin(a);tk+=`<line x1="${(cx+c*R).toFixed(1)}" y1="${(cy+s*R).toFixed(1)}" x2="${(cx+c*(R-14)).toFixed(1)}" y2="${(cy+s*(R-14)).toFixed(1)}"/>`;}
     $('#bgsvg').innerHTML=
       `<path d="${g}" stroke="#FFFFFF" stroke-opacity="0.035" stroke-width="1" fill="none"/>`+
-      `<polygon points="1120,0 1190,0 930,900 860,900" fill="#6E8296" fill-opacity="0.18"/><polygon points="1215,0 1250,0 990,900 955,900" fill="#A9B4BF" fill-opacity="0.12"/><polygon points="1290,0 1420,0 1160,900 1030,900" fill="#6E8296" fill-opacity="0.10"/><polygon points="0,560 0,900 260,900" fill="#2A3846" fill-opacity="0.6"/><polygon points="1600,0 1600,260 1420,0" fill="#2A3846" fill-opacity="0.6"/>`+
-      `<g stroke="#C2A061" stroke-opacity="0.45" stroke-width="3">${tk}</g><circle cx="800" cy="470" r="590" stroke="#FFFFFF" stroke-opacity="0.08" fill="none"/><circle cx="800" cy="470" r="520" stroke="#FFFFFF" stroke-opacity="0.06" stroke-dasharray="2 6" fill="none"/>`+
+      `<polygon points="1120,0 1190,0 930,900 860,900" fill="${t.stripe1}" fill-opacity="0.18"/><polygon points="1215,0 1250,0 990,900 955,900" fill="${t.stripe2}" fill-opacity="0.12"/><polygon points="1290,0 1420,0 1160,900 1030,900" fill="${t.stripe1}" fill-opacity="0.10"/><polygon points="0,560 0,900 260,900" fill="${t.shade}" fill-opacity="0.6"/><polygon points="1600,0 1600,260 1420,0" fill="${t.shade}" fill-opacity="0.6"/>`+
+      `<g stroke="${t.accent}" stroke-opacity="0.45" stroke-width="3">${tk}</g><circle cx="800" cy="470" r="590" stroke="#FFFFFF" stroke-opacity="0.08" fill="none"/><circle cx="800" cy="470" r="520" stroke="#FFFFFF" stroke-opacity="0.06" stroke-dasharray="2 6" fill="none"/>`+
       `<path d="M9 32V9H32M1568 9H1591V32M1591 868V891H1568M32 891H9V868" stroke="#EEF1F3" stroke-opacity="0.35" stroke-width="1.5" fill="none"/>`;
-  })();
+  }
+  bg();
 
   /* ---------- build repeated parts ---------- */
   function chk(label,key,sm){const e=document.createElement('span');e.className='chk'+(sm?' sm':'');e.setAttribute('role','checkbox');e.setAttribute('aria-checked','false');e.tabIndex=0;e.dataset.k=key;e.innerHTML='<span class="box"><i></i></span>';e.append(label);return e;}
@@ -381,6 +406,31 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
     Object.assign(imgs,s.i||{});document.querySelectorAll('.slot').forEach(paint);}
   load();
 
+  function applyTheme(id,quiet){
+    theme=THEMES.find(t=>t.id===id)||THEMES[0];
+    const r=document.documentElement.style;
+    r.setProperty('--gold-2',theme.accent);r.setProperty('--gold',theme.accent2);r.setProperty('--green',theme.dot);
+    r.setProperty('--navy',theme.bg);r.setProperty('--navy-2',theme.bg2);
+    // SVG 속 포인트색: html2canvas가 CSS 변수를 못 읽어서 값을 직접 넣는다
+    document.querySelectorAll('.card [stroke="#C2A061"]').forEach(n=>n.setAttribute('data-acc-s',''));
+    document.querySelectorAll('.card [fill="#C2A061"]').forEach(n=>n.setAttribute('data-acc-f',''));
+    document.querySelectorAll('[data-acc-s]').forEach(n=>n.setAttribute('stroke',theme.accent));
+    document.querySelectorAll('[data-acc-f]').forEach(n=>n.setAttribute('fill',theme.accent));
+    bg();
+    $('#teamName').textContent=theme.label;$('#team').value=theme.id;
+    try{localStorage.setItem(KEY+'-team',theme.id);}catch(_){}
+    if(!quiet)toast(`${theme.label} 테마로 바꿨어요.`);
+  }
+  (function initTeam(){
+    const sel=$('#team');
+    THEMES.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=t.label;sel.appendChild(o);});
+    sel.onchange=()=>applyTheme(sel.value);
+    // 주소에 ?team=muse 처럼 붙이면 그 팀으로 시작
+    let start=new URLSearchParams(location.search).get('team');
+    if(!start){try{start=localStorage.getItem(KEY+'-team');}catch(_){}}
+    applyTheme(start||'consentes',true);
+  })();
+
   const rw=$('#resetWrap');
   function resetUI(){rw.innerHTML='<button class="btn danger" id="reset">전부 지우기</button>';$('#reset').onclick=ask;}
   function ask(){rw.innerHTML='<span class="confirm">입력한 내용과 이미지를 모두 지울까요? <button class="btn danger" id="rYes">지우기</button><button class="btn" id="rNo">취소</button></span>';
@@ -405,11 +455,11 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
   $('#ovClose').onclick=()=>{$('#ov').hidden=true;};
   async function render(){
     if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-    return html2canvas(card,{scale:2,backgroundColor:'#0E1A23',logging:false,scrollX:0,scrollY:0,width:1600,height:900,windowWidth:1600,windowHeight:900,
+    return html2canvas(card,{scale:2,backgroundColor:theme.bg,logging:false,scrollX:0,scrollY:0,width:1600,height:900,windowWidth:1600,windowHeight:900,
       onclone:(doc)=>{
         doc.querySelectorAll('body > style, body > link').forEach(n=>doc.head.appendChild(n));
         const c=doc.getElementById('card');c.style.transform='none';c.style.position='relative';
-        doc.documentElement.style.padding='0';doc.body.style.margin='0';doc.body.style.background='#0E1A23';
+        doc.documentElement.style.padding='0';doc.body.style.margin='0';doc.body.style.background=theme.bg;
         doc.body.replaceChildren(c);
         c.querySelectorAll('input').forEach(inp=>{const o=document.getElementById(inp.id);const d=doc.createElement('div');d.className=inp.className+' as-text';d.textContent=o?o.value:'';d.style.justifyContent=getComputedStyle(o||inp).textAlign==='center'?'center':'flex-start';inp.replaceWith(d);});
       }});
@@ -422,13 +472,13 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
       const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
       if(!blob||!canvas.width)throw new Error('empty');
       if(dl){
-        try{await dl.save({filename:`THEMIS_트친소표_${nick}.png`,data:blob});toast('저장했어요.');}
+        try{await dl.save({filename:`THEMIS_${theme.label.replace(/\s+/g,'_')}_${nick}.png`,data:blob});toast('저장했어요.');}
         catch(err){const c=err&&err.code;if(c==='declined')toast('저장을 취소했어요.');else if(c==='rate_limited')toast('잠시 후 다시 눌러 주세요.');else showOverlay(blob,c||'unknown');}
       }else if(/KAKAOTALK|Instagram|FBAN|FBAV|Line\/|Twitter|NAVER/i.test(navigator.userAgent)){
         // 앱 안 브라우저는 다운로드가 막히는 경우가 많아 이미지를 띄워 길게 눌러 저장하게 한다
         showOverlay(blob,'in-app');
       }else{
-        const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=`THEMIS_트친소표_${nick}.png`;
+        const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=`THEMIS_${theme.label.replace(/\s+/g,'_')}_${nick}.png`;
         document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('저장했어요.');
       }
     }catch(_){toast('이미지를 만들지 못했어요. 새로고침 후 다시 시도해 주세요.');}
