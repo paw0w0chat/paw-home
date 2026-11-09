@@ -466,6 +466,8 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
     const rebel=theme.motif==='rebel';
     $('#card').classList.toggle('t-rebel',rebel);
     $('#graf').innerHTML=rebel?graffiti(theme):'';
+    // 'UNITED STATES DIVISION · 2036'은 미국 지부 팀(CONSENTES)에만
+    document.querySelector('.hd .t3').hidden=theme.id!=='consentes';
     $('#teamName').textContent=theme.label;$('#team').value=theme.id;
     try{localStorage.setItem(KEY+'-team',theme.id);}catch(_){}
     if(!quiet)toast(`${theme.label} 테마로 바꿨어요.`);
