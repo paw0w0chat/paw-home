@@ -311,12 +311,14 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
   const KEY='themis-ttsp-v1';
 
   /* ---------- team themes ----------
-     팀마다 포인트색(accent), 진한 포인트(accent2), 팀 점(dot), 배경(bg, bg2),
-     배경 사선(stripe1, stripe2), 모서리 그늘(shade)을 바꾼다.
+     accent  = 어두운 바탕 위 포인트 (엠블럼, 눈금 링, 상단 영문, NG 라벨, 푸터 선)
+     accent2 = 종이 패널 위 포인트 (큰 첫 글자 N·D, MAIN 원, 그 외 드림 번호)
+     dot = 팀 점, bg/bg2 = 바탕, stripe1/2 = 배경 사선, shade = 모서리 그늘, paper = 패널 종이색(선택)
      ※ CONSENTES 외 팀 색은 임시값 — 팀별 레퍼런스를 받으면 확정 */
   const THEMES=[
     {id:'consentes',  label:'TEAM CONSENTES',  accent:'#C2A061',accent2:'#B08D52',dot:'#5E9C7F',bg:'#0E1A23',bg2:'#13212B',stripe1:'#6E8296',stripe2:'#A9B4BF',shade:'#2A3846'},
-    {id:'council',    label:'COUNCIL',         accent:'#A897F0',accent2:'#8C7AD6',dot:'#A897F0',bg:'#110E1D',bg2:'#18142A',stripe1:'#6C628F',stripe2:'#B3AAD6',shade:'#262040'},
+    // COUNCIL: 은빛 섭리의 눈 엠블럼 + 바이올렛 (레퍼런스: 세계관 배너, 코스모스 프로필)
+    {id:'council',    label:'COUNCIL',         accent:'#C9CED8',accent2:'#7E3FC7',dot:'#A66BFF',bg:'#0E0917',bg2:'#1A1029',stripe1:'#7B2CBF',stripe2:'#B9A3E3',shade:'#2A1745',paper:'#EEEEF2'},
     {id:'olympian',   label:'OLYMPIAN',        accent:'#E3B04B',accent2:'#C99736',dot:'#E3B04B',bg:'#12100B',bg2:'#1B1810',stripe1:'#857250',stripe2:'#CDBB8F',shade:'#2C2616'},
     {id:'phalanx',    label:'PHALANX',         accent:'#E58A6B',accent2:'#C9704F',dot:'#E58A6B',bg:'#150F0D',bg2:'#1F1613',stripe1:'#8B685C',stripe2:'#CFAEA2',shade:'#30211C'},
     {id:'muse',       label:'MUSE',            accent:'#E68AB0',accent2:'#C96E95',dot:'#E68AB0',bg:'#160E13',bg2:'#20151C',stripe1:'#8C6A7C',stripe2:'#D4AFC2',shade:'#31202A'},
@@ -410,7 +412,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
     theme=THEMES.find(t=>t.id===id)||THEMES[0];
     const r=document.documentElement.style;
     r.setProperty('--gold-2',theme.accent);r.setProperty('--gold',theme.accent2);r.setProperty('--green',theme.dot);
-    r.setProperty('--navy',theme.bg);r.setProperty('--navy-2',theme.bg2);
+    r.setProperty('--navy',theme.bg);r.setProperty('--navy-2',theme.bg2);r.setProperty('--paper',theme.paper||'#F3F3F0');
     // SVG 속 포인트색: html2canvas가 CSS 변수를 못 읽어서 값을 직접 넣는다
     document.querySelectorAll('.card [stroke="#C2A061"]').forEach(n=>n.setAttribute('data-acc-s',''));
     document.querySelectorAll('.card [fill="#C2A061"]').forEach(n=>n.setAttribute('data-acc-f',''));
