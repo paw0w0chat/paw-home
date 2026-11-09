@@ -24,20 +24,31 @@ export function SectionHead({ title, sub, href, linkLabel = "전체 보기 →" 
 }
 
 export function PersonaCard({ persona, world, dark = false }: { persona: Persona; world?: Group; dark?: boolean }) {
+  // 대표 이미지: 두상, 없으면 전신
+  const cover = persona.headImage || persona.bodyImage;
+  const meta = persona.cardMeta ?? { label: "", value: "" };
+  // "항목: 값" 대신 문장만 적었으면 왼쪽 라벨 없이 한 줄로
+  const metaText = meta.value ? meta.value : meta.label;
+  const metaLabel = meta.value ? meta.label : "";
   return (
     <Link href={`/personas/${persona.id}`} className="persona-card">
       <div className={`card-top${dark ? " dark" : ""}`}>
         <span>{serial("P", persona.order)}</span>
         <span>{world ? world.title : ""}</span>
       </div>
+      <div className="persona-cover">
+        {cover ? <img src={cover} alt="" loading="lazy" /> : <span aria-hidden="true">[대표 이미지]</span>}
+      </div>
       <div className="card-name">
         <span className="display">{persona.codename}</span>
         <span className="ko">{persona.nameKo}</span>
       </div>
-      <div className="card-meta">
-        <span className="label">{persona.cardMeta.label}</span>
-        <span>{persona.cardMeta.value}</span>
-      </div>
+      {metaText ? (
+        <div className="card-meta">
+          {metaLabel ? <span className="label">{metaLabel}</span> : null}
+          <span>{metaText}</span>
+        </div>
+      ) : null}
       <div className="card-foot">
         <Barcode width={84} height={20} />
         <span style={{ display: "flex", alignItems: "center", gap: 8 }}>VIEW <Star size={14} /></span>
