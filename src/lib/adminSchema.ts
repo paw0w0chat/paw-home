@@ -48,7 +48,7 @@ export const SECTIONS: Section[] = [
       { key: "platform", label: "플랫폼", type: "text" },
       { key: "releasedAt", label: "출시일", type: "text", placeholder: "2026-11-06" },
       { key: "url", label: "작품 링크", type: "text", placeholder: "https://" },
-      { key: "thumbnail", label: "썸네일", type: "image" },
+      { key: "thumbnail", label: "썸네일 (1:1)", type: "image", hint: "작품 목록에 정사각형으로 잘려서 보여요" },
     ],
   },
   {

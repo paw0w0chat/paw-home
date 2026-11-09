@@ -59,6 +59,19 @@ export function GroupHead({ code, group, count, unit }: { code: string; group: G
   );
 }
 
+function WorkThumb({ work }: { work: Work }) {
+  const img = work.thumbnail ? (
+    <img src={work.thumbnail} alt="" loading="lazy" />
+  ) : (
+    <span aria-hidden="true">NO IMG</span>
+  );
+  return work.url ? (
+    <a href={work.url} target="_blank" rel="noreferrer" className="work-thumb" aria-label={`${work.title} 열기`}>{img}</a>
+  ) : (
+    <span className="work-thumb">{img}</span>
+  );
+}
+
 export function WorksTable({ works, highlightFirst = false }: { works: Work[]; highlightFirst?: boolean }) {
   if (works.length === 0) return <p className="empty">아직 등록된 작품이 없어요.</p>;
   return (
@@ -67,6 +80,7 @@ export function WorksTable({ works, highlightFirst = false }: { works: Work[]; h
         <thead>
           <tr>
             <th style={{ width: 64 }}>NO.</th>
+            <th style={{ width: 88 }}><span className="sr-only">썸네일</span></th>
             <th>TITLE</th>
             <th>GENRE</th>
             <th>PLATFORM</th>
@@ -77,6 +91,9 @@ export function WorksTable({ works, highlightFirst = false }: { works: Work[]; h
           {works.map((w, i) => (
             <tr key={w.id}>
               <td className="num">{`W-${String(w.order).padStart(2, "0")}`}</td>
+              <td style={{ paddingTop: 12, paddingBottom: 12 }}>
+                <WorkThumb work={w} />
+              </td>
               <td className="title">
                 <span style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                   {w.url ? <a href={w.url} target="_blank" rel="noreferrer">{w.title}</a> : w.title}
