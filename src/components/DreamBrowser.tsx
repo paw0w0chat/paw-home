@@ -58,10 +58,12 @@ export function DreamBrowser({ dreams, groups, personas }: { dreams: Dream[]; gr
                     <span className="display" style={{ fontSize: 28 }}>{d.characterEn}</span>
                     <span className="ko" style={{ fontSize: 17 }}>{d.characterKo} × {persona?.nameKo ?? ""}</span>
                   </div>
-                  <div className="card-meta" style={{ fontSize: 14, lineHeight: 1.6, padding: "10px 14px" }}>
-                    <span className="label" style={{ width: 48 }}>NOTE</span>
-                    <span>{d.note}</span>
-                  </div>
+                  {d.note ? (
+                    <div className="card-meta" style={{ fontSize: 14, lineHeight: 1.6, padding: "10px 14px" }}>
+                      <span className="label" style={{ width: 48 }}>NOTE</span>
+                      <span>{d.note}</span>
+                    </div>
+                  ) : null}
                   <div className="card-foot" style={{ padding: "8px 8px 8px 14px", flexWrap: "wrap", gap: 8 }}>
                     <span />
                     {persona ? (

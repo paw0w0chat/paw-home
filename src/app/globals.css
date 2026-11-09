@@ -184,9 +184,16 @@ img { max-width: 100%; display: block; }
 /* ── dream card ── */
 .dream-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
 .dream-card { background: var(--offwhite); border: var(--line); display: flex; flex-direction: column; }
-.dream-pair { display: flex; align-items: center; gap: 12px; padding: 16px 14px; }
-.dream-thumb { width: 88px; height: 88px; flex: none; border: var(--line); background: repeating-linear-gradient(135deg, var(--paper) 0 8px, var(--offwhite) 8px 16px); display: flex; align-items: flex-end; padding: 4px; font-family: var(--font-mono); font-size: 10px; color: var(--graphite); overflow: hidden; }
-.dream-thumb img { object-fit: cover; object-position: center top; margin: -4px; width: calc(100% + 8px); height: calc(100% + 8px); }
+.dream-pair { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 18px 14px; }
+.dream-thumb {
+  position: relative; flex: 0 1 128px; aspect-ratio: 1 / 1; min-width: 0;
+  border: var(--line); overflow: hidden;
+  background: repeating-linear-gradient(135deg, var(--paper) 0 8px, var(--offwhite) 8px 16px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 10px; color: var(--graphite);
+}
+/* 이미지가 칸을 꽉 채우고 가운데 기준으로 잘린다 */
+.dream-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 
 /* ── footer ── */
 .site-footer { border-top: var(--line); margin-top: 72px; }
