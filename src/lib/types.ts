@@ -57,7 +57,8 @@ export type Dream = Visibility & {
   groupId: string;
   status: DreamStatus;
   note: string;
-  tags: string[];
+  /** 더 이상 쓰지 않음 (예전 데이터 호환용) */
+  tags?: string[];
   characterImage?: string;
 };
 

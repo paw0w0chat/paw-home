@@ -63,7 +63,7 @@ export function DreamBrowser({ dreams, groups, personas }: { dreams: Dream[]; gr
                     <span>{d.note}</span>
                   </div>
                   <div className="card-foot" style={{ padding: "8px 8px 8px 14px", flexWrap: "wrap", gap: 8 }}>
-                    <span className="muted" style={{ fontWeight: 400 }}>{d.tags.map((t) => `#${t}`).join(" ")}</span>
+                    <span />
                     {persona ? (
                       <Link href={`/personas/${persona.id}`} style={{ minHeight: 44, display: "flex", alignItems: "center", padding: "0 10px" }}>PERSONA →</Link>
                     ) : null}

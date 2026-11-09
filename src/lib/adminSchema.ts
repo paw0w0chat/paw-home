@@ -93,7 +93,6 @@ export const SECTIONS: Section[] = [
         ],
       },
       { key: "note", label: "드림 노트", type: "textarea" },
-      { key: "tags", label: "태그", type: "tags", hint: "쉼표로 구분", placeholder: "BL, 캠퍼스" },
       { key: "characterImage", label: "캐릭터 이미지", type: "image" },
     ],
   },
