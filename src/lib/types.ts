@@ -65,8 +65,11 @@ export type Dream = Visibility & {
 export type Work = Visibility & {
   id: string;
   title: string;
-  genre: string;
-  platform: string;
+  /** 캐릭터 한 줄 소개 */
+  tagline?: string;
+  /** 여러 개 가능 (예전 데이터는 문자열 하나) */
+  genre: string[] | string;
+  platform: string[] | string;
   releasedAt: string;
   url?: string;
   thumbnail?: string;

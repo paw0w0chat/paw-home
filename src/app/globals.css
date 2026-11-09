@@ -257,3 +257,11 @@ textarea.admin-input { resize: vertical; }
 /* 얼굴이 잘 보이도록 위쪽 기준으로 자른다 */
 .work-cover img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ── work card details ── */
+.pill-row { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.pill-row .pill { padding: 3px 10px; font-family: var(--font-body); font-size: 12px; font-weight: 500; background: var(--paper); line-height: 1.4; }
+.work-tagline {
+  margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}

@@ -59,6 +59,19 @@ export function GroupHead({ code, group, count, unit }: { code: string; group: G
   );
 }
 
+/** 예전 데이터(문자열)와 새 데이터(배열)를 모두 목록으로 */
+const asList = (v: string[] | string | undefined) =>
+  (Array.isArray(v) ? v : (v ?? "").split(",")).map((s) => s.trim()).filter(Boolean);
+
+function Pills({ items }: { items: string[] }) {
+  if (items.length === 0) return <span className="muted">—</span>;
+  return (
+    <span className="pill-row">
+      {items.map((t) => <span key={t} className="pill">{t}</span>)}
+    </span>
+  );
+}
+
 export function WorkCard({ work, isNew = false }: { work: Work; isNew?: boolean }) {
   const body = (
     <>
@@ -69,11 +82,12 @@ export function WorkCard({ work, isNew = false }: { work: Work; isNew?: boolean 
       <div className="work-cover">
         {work.thumbnail ? <img src={work.thumbnail} alt="" loading="lazy" /> : <span aria-hidden="true">[썸네일]</span>}
       </div>
-      <div className="card-name" style={{ paddingBottom: 10 }}>
+      <div className="card-name" style={{ paddingBottom: 12, gap: 8 }}>
         <span className="ko" style={{ fontSize: 20 }}>{work.title}</span>
+        {work.tagline ? <p className="work-tagline">{work.tagline}</p> : null}
       </div>
-      <div className="card-meta"><span className="label">GENRE</span><span>{work.genre}</span></div>
-      <div className="card-meta"><span className="label">PLATFORM</span><span>{work.platform}</span></div>
+      <div className="card-meta" style={{ alignItems: "flex-start" }}><span className="label" style={{ paddingTop: 5 }}>GENRE</span><Pills items={asList(work.genre)} /></div>
+      <div className="card-meta" style={{ alignItems: "flex-start" }}><span className="label" style={{ paddingTop: 5 }}>PLATFORM</span><Pills items={asList(work.platform)} /></div>
       <div className="card-meta"><span className="label">RELEASED</span><span className="mono" style={{ fontSize: 12 }}>{work.releasedAt}</span></div>
       <div className="card-foot">
         <Barcode width={84} height={20} />

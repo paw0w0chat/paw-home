@@ -201,9 +201,9 @@ export const dreams: Dream[] = [
 ];
 
 export const works: Work[] = [
-  { id: "w-03", title: "[작품명]", genre: "[장르]", platform: "[플랫폼]", releasedAt: "[출시일]", isPublic: true, order: 3 },
-  { id: "w-02", title: "[작품명]", genre: "[장르]", platform: "[플랫폼]", releasedAt: "[출시일]", isPublic: true, order: 2 },
-  { id: "w-01", title: "[작품명]", genre: "[장르]", platform: "[플랫폼]", releasedAt: "[출시일]", isPublic: true, order: 1 },
+  { id: "w-03", title: "[작품명]", tagline: "[캐릭터 한 줄 소개]", genre: ["[장르]"], platform: ["[플랫폼]"], releasedAt: "[출시일]", isPublic: true, order: 3 },
+  { id: "w-02", title: "[작품명]", tagline: "[캐릭터 한 줄 소개]", genre: ["[장르]"], platform: ["[플랫폼]"], releasedAt: "[출시일]", isPublic: true, order: 2 },
+  { id: "w-01", title: "[작품명]", tagline: "[캐릭터 한 줄 소개]", genre: ["[장르]"], platform: ["[플랫폼]"], releasedAt: "[출시일]", isPublic: true, order: 1 },
 ];
 
 export const prompts: Prompt[] = [];

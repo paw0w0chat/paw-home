@@ -44,8 +44,9 @@ export const SECTIONS: Section[] = [
     titleKeys: ["title"], subKeys: ["platform", "releasedAt"],
     fields: [
       { key: "title", label: "작품명", type: "text", required: true },
-      { key: "genre", label: "장르", type: "text" },
-      { key: "platform", label: "플랫폼", type: "text" },
+      { key: "tagline", label: "한 줄 소개", type: "textarea", hint: "카드에 작품명 아래로 보여요", placeholder: "철거 직전 고시원, 마지막 세입자와 남겨진 관리인" },
+      { key: "genre", label: "장르", type: "tags", hint: "여러 개면 쉼표로 구분", placeholder: "로맨스, 현대판타지" },
+      { key: "platform", label: "플랫폼", type: "tags", hint: "여러 개면 쉼표로 구분", placeholder: "제타, 크랙" },
       { key: "releasedAt", label: "출시일", type: "text", placeholder: "2026-11-06" },
       { key: "url", label: "작품 링크", type: "text", placeholder: "https://" },
       { key: "thumbnail", label: "썸네일 (1:1)", type: "image", hint: "작품 목록에 정사각형으로 잘려서 보여요" },
@@ -148,7 +149,7 @@ export function toForm(field: Field, value: unknown): string {
       return r.label || r.value ? `${r.label}: ${r.value}` : "";
     }
     case "tags":
-      return (value as string[]).join(", ");
+      return Array.isArray(value) ? value.join(", ") : String(value);
     default:
       return String(value);
   }
