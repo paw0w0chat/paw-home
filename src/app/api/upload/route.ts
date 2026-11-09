@@ -6,8 +6,15 @@ import { handleUploadPresigned, type HandleUploadPresignedBody } from "@vercel/b
 import { NextResponse } from "next/server";
 import { AuthError, verifyAdmin } from "@/lib/verifyAdmin";
 
-const ALLOWED = ["image/png", "image/jpeg", "image/webp", "image/gif"];
-const MAX_BYTES = 10 * 1024 * 1024;
+const IMAGES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
+// 툴 · 템플릿 첨부 파일은 PDF · ZIP도 허용
+const FILES = [...IMAGES, "application/pdf", "application/zip", "application/x-zip-compressed"];
+
+function rulesFor(pathname: string) {
+  return pathname.startsWith("tools/")
+    ? { types: FILES, maxBytes: 30 * 1024 * 1024 }
+    : { types: IMAGES, maxBytes: 10 * 1024 * 1024 };
+}
 
 export async function POST(request: Request) {
   const body = (await request.json()) as HandleUploadPresignedBody;
@@ -17,14 +24,15 @@ export async function POST(request: Request) {
       request,
       getSignedToken: async (pathname) => {
         await verifyAdmin(request.headers.get("authorization"));
+        const { types, maxBytes } = rulesFor(pathname);
         const token = await issueSignedToken({
           pathname,
           operations: ["put"],
-          allowedContentTypes: ALLOWED,
-          maximumSizeInBytes: MAX_BYTES,
+          allowedContentTypes: types,
+          maximumSizeInBytes: maxBytes,
           validUntil: Date.now() + 10 * 60 * 1000,
         });
-        return { token, urlOptions: { allowedContentTypes: ALLOWED, maximumSizeInBytes: MAX_BYTES } };
+        return { token, urlOptions: { allowedContentTypes: types, maximumSizeInBytes: maxBytes } };
       },
     });
     return NextResponse.json(result);

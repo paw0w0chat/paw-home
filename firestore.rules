@@ -15,7 +15,7 @@ service cloud.firestore {
     }
 
     function isContent(col) {
-      return col in ["groups", "personas", "dreams", "works", "prompts"];
+      return col in ["groups", "personas", "dreams", "works", "prompts", "tools"];
     }
 
     // 프로필: 누구나 읽기, 관리자만 쓰기

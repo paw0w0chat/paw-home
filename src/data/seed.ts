@@ -1,7 +1,7 @@
 // 초기 데이터. Firebase 연결 후에는 관리자 페이지에서 Firestore로 옮겨 관리한다.
 // 대괄호 [ ] 로 표시된 값은 아직 채우지 않은 자리다.
 
-import type { Dream, Group, Persona, Profile, Prompt, Work } from "@/lib/types";
+import type { Dream, Group, Persona, Profile, Prompt, Tool, Work } from "@/lib/types";
 
 export const groups: Group[] = [
   // 세계관
@@ -207,6 +207,8 @@ export const works: Work[] = [
 ];
 
 export const prompts: Prompt[] = [];
+
+export const tools: Tool[] = [];
 
 export const profile: Profile = {
   intro: "PAWCAT의 페르소나 · 프롬프트 · 작품 아카이브.",

@@ -4,7 +4,7 @@
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import * as seed from "@/data/seed";
 import { getDb, isFirebaseConfigured, PROFILE_DOC, type CollectionName } from "@/lib/firebase";
-import type { Dream, DreamStatus, Group, Persona, Profile, Prompt, Work } from "@/lib/types";
+import type { Dream, DreamStatus, Group, Persona, Profile, Prompt, Tool, Work } from "@/lib/types";
 
 type Visible = { id: string; isPublic: boolean; order: number };
 
@@ -16,6 +16,7 @@ const SEED: Record<CollectionName, Visible[]> = {
   dreams: seed.dreams,
   works: seed.works,
   prompts: seed.prompts,
+  tools: seed.tools,
 };
 
 /** 공개 항목 전체 (order 오름차순) */
@@ -97,6 +98,13 @@ export async function getRecentWorks(limit: number): Promise<Work[]> {
 }
 
 export const getPrompts = () => list<Prompt>("prompts");
+
+/** 최신 툴부터 */
+export async function getTools(): Promise<Tool[]> {
+  return (await list<Tool>("tools")).reverse();
+}
+
+export const getTool = (id: string) => one<Tool>("tools", id);
 
 /** 화면에 보이는 번호 (P-001, D-001 …) */
 export const serial = (prefix: string, n: number) => `${prefix}-${String(n).padStart(3, "0")}`;

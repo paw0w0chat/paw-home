@@ -71,10 +71,10 @@ export function GroupHead({ code, group, count, unit }: { code: string; group: G
 }
 
 /** 예전 데이터(문자열)와 새 데이터(배열)를 모두 목록으로 */
-const asList = (v: string[] | string | undefined) =>
+export const asList = (v: string[] | string | undefined) =>
   (Array.isArray(v) ? v : (v ?? "").split(",")).map((s) => s.trim()).filter(Boolean);
 
-function Pills({ items }: { items: string[] }) {
+export function Pills({ items }: { items: string[] }) {
   if (items.length === 0) return <span className="muted">—</span>;
   return (
     <span className="pill-row">

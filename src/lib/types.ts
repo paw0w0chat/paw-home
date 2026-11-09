@@ -92,6 +92,24 @@ export type Prompt = Visibility & {
   body: string;
 };
 
+/** 툴 · 템플릿 (tools 컬렉션) — 트친소표 같은 배포물 */
+export type Tool = Visibility & {
+  id: string;
+  title: string;
+  /** 카드에 보이는 짧은 설명 */
+  summary?: string;
+  /** 분류 태그 (예: 트친소표, 템플릿) */
+  category?: string[] | string;
+  /** 미리보기 이미지 */
+  cover?: string;
+  /** 첨부 파일 (PNG · PDF · ZIP) */
+  file?: string;
+  /** 배포 트윗, 사용하기 등 */
+  links?: WorkLink[];
+  /** 사용법 · 이용 규칙 · 크레딧 */
+  body?: string;
+};
+
 /** 프로필 (profile 문서 1개) */
 export type Profile = {
   intro: string;

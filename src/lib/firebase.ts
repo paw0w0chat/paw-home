@@ -23,7 +23,7 @@ export function getDb(): Firestore {
 }
 
 /** Firestore 컬렉션 이름 */
-export const COLLECTIONS = ["groups", "personas", "dreams", "works", "prompts"] as const;
+export const COLLECTIONS = ["groups", "personas", "dreams", "works", "prompts", "tools"] as const;
 export type CollectionName = (typeof COLLECTIONS)[number];
 /** 프로필은 site/profile 문서 하나 */
 export const PROFILE_DOC = ["site", "profile"] as const;

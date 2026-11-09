@@ -12,7 +12,8 @@ export type FieldType =
   | "stats" // "LABEL: 값" 한 줄에 하나 → StatRow[]
   | "meta" // "LABEL: 값" 한 줄 → StatRow
   | "tags" // 쉼표로 구분 → string[]
-  | "links"; // "이름 | 주소" 한 줄에 하나 → { label, url }[]
+  | "links" // "이름 | 주소" 한 줄에 하나 → { label, url }[]
+  | "file"; // 첨부 파일 (PNG · JPG · PDF · ZIP)
 
 export type OptionSource = "groups" | "groups:world" | "groups:work" | "personas";
 
@@ -111,6 +112,19 @@ export const SECTIONS: Section[] = [
       },
       { key: "personaId", label: "연결 페르소나 (선택)", type: "select", options: "personas" },
       { key: "body", label: "본문", type: "textarea", required: true },
+    ],
+  },
+  {
+    id: "tools", code: "C-07", en: "TOOLS", ko: "툴 · 템플릿",
+    titleKeys: ["title"], subKeys: ["category"], customId: true,
+    fields: [
+      { key: "title", label: "제목", type: "text", required: true },
+      { key: "summary", label: "짧은 설명", type: "textarea", hint: "목록 카드에 보여요", placeholder: "자캐 커뮤용 트친소표 템플릿" },
+      { key: "category", label: "분류", type: "tags", hint: "여러 개면 쉼표로 구분", placeholder: "트친소표, 템플릿" },
+      { key: "cover", label: "미리보기 이미지", type: "image", hint: "목록에서는 4:3으로 잘리고, 상세 페이지에서는 원본 비율로 보여요" },
+      { key: "file", label: "첨부 파일", type: "file", hint: "PNG · JPG · PDF · ZIP, 30MB까지. PSD는 ZIP으로 묶어서 올려주세요" },
+      { key: "links", label: "링크", type: "links", hint: "한 줄에 하나씩 `이름 | 주소`", placeholder: "배포 트윗 | https://x.com/...\n구글 드라이브 | https://drive.google.com/..." },
+      { key: "body", label: "사용법 · 이용 규칙", type: "textarea", hint: "상세 페이지에 그대로 보여요. 줄바꿈 유지", placeholder: "- 출처 표기 필수\n- 상업적 이용 금지" },
     ],
   },
   {

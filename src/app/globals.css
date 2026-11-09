@@ -296,3 +296,20 @@ textarea.admin-input { resize: vertical; }
 .persona-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: filter 160ms; }
 .persona-card:hover .persona-cover img { filter: grayscale(1) contrast(1.1); }
 @media (prefers-reduced-motion: reduce) { .persona-cover img { transition: none; } }
+
+/* ── tools ── */
+.tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.tool-cover {
+  position: relative; aspect-ratio: 4 / 3; border-bottom: var(--line); overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: repeating-linear-gradient(135deg, var(--paper) 0 10px, var(--offwhite) 10px 20px);
+  font-family: var(--font-mono); font-size: 12px; color: var(--graphite);
+}
+.tool-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.tool-preview {
+  display: flex; align-items: center; justify-content: center; min-height: 320px; padding: 16px;
+  background: repeating-linear-gradient(135deg, var(--paper) 0 10px, var(--offwhite) 10px 20px);
+  font-family: var(--font-mono); font-size: 12px; color: var(--graphite);
+}
+/* 상세에서는 자르지 않고 원본 비율 그대로 */
+.tool-preview img { width: 100%; height: auto; max-height: 80vh; object-fit: contain; border: var(--line-thin); background: #fff; }
