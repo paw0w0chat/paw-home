@@ -227,7 +227,6 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
           <div class="nick">
             <div class="ttl"><div class="st"><span class="cap">N</span><span class="rest">ICKNAME</span></div><span class="kr">닉네임</span></div>
             <input class="fld f-nick" id="f-nick" maxlength="20" placeholder="닉네임" autocomplete="off">
-            <div class="handle">@<input class="fld" id="f-handle" maxlength="24" placeholder="아이디" autocomplete="off"></div>
           </div>
           <div class="aff">
             <div class="head"><b>소속</b><small>AFFILIATION</small><span class="ln"></span></div>
@@ -243,7 +242,6 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
           <div class="meta"><span>ZONE 02&nbsp;&nbsp;/&nbsp;&nbsp;MAIN DREAM</span><span>메인 드림&nbsp;&nbsp;·&nbsp;&nbsp;커플 표기</span></div>
           <div class="ttl d-ttl">
             <div class="st"><span class="cap">D</span><span class="rest">REAM</span></div>
-            <div class="d-right"><span class="it">in the name of Themis</span><span class="ex">예) 캐릭터 × 페르소나</span></div>
           </div>
           <div class="couple">
             <div class="cimgs">
@@ -258,8 +256,8 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
               </div>
             </div>
             <div class="cnames">
-              <div class="cname"><input class="fld" id="f-char" maxlength="14" placeholder="캐릭터" autocomplete="off"><small>CHARACTER</small></div>
-              <div class="cname"><input class="fld" id="f-pers" maxlength="14" placeholder="페르소나" autocomplete="off"><small>PERSONA</small></div>
+              <div class="cname"><input class="fld" id="f-char" maxlength="14" placeholder="캐릭터" autocomplete="off"></div>
+              <div class="cname"><input class="fld" id="f-pers" maxlength="14" placeholder="페르소나" autocomplete="off"></div>
             </div>
             <div class="ctypes" data-group="ctype"></div>
           </div>
@@ -274,8 +272,8 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
         <section class="panel p3">
           <div class="meta"><span>ZONE 03&nbsp;&nbsp;/&nbsp;&nbsp;PROFILE NOTE</span><span>교류&nbsp;&nbsp;·&nbsp;&nbsp;취향</span></div>
           <div class="ty">
-            <div class="head"><b>교류 성향</b><small>TYPE</small><span class="ln"></span><span class="rt">해당 항목 선택</span></div>
-            <div class="pills" data-group="type"><span class="pill free"><input class="fld" id="f-type-etc" maxlength="8" placeholder="직접 입력" autocomplete="off" aria-label="교류 성향 직접 입력"></span></div>
+            <div class="head"><b>교류 성향</b><small>TYPE</small><span class="ln"></span></div>
+            <div class="pills" data-group="type"></div>
           </div>
           <div class="blk" id="blk-like"></div>
           <div class="blk" id="blk-ng"></div>
@@ -285,8 +283,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
         <div class="ft">
           <div class="gl"></div>
           <div class="z">ZONE 00&nbsp;&nbsp;/&nbsp;&nbsp;FRIEND REQUEST</div>
-          <div class="c">빈칸을 채워 트친소에 사용해 주세요&nbsp;&nbsp;·&nbsp;&nbsp;화면을 누르면 접속합니다</div>
-          <div class="cta">CLICK TO CONNECT<span>↗</span></div>
+          <div class="c">빈칸을 채워 트친소에 사용해 주세요</div>
         </div>
       </div>
     </div>
@@ -327,7 +324,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
   const groups={branch:['US','KOREA'],line:['올림포스','티탄','타르타로스','프로토게노이','크세노스'],pos:['SENTINEL','GUIDE','기타'],ctype:['BL','HL','GL','NL','기타']};
   for(const [g,list] of Object.entries(groups)){const box=document.querySelector(`[data-group="${g}"]`);const first=box.firstChild;list.forEach((l,i)=>box.insertBefore(chk(l,g+'-'+i),g==='pos'?first:null));}
   const openBox=document.querySelector('[data-group="open"]');['전체 오픈','일부 오픈','비공개','캐릭터마다'].forEach((l,i)=>openBox.append(pill(l,'open-'+i)));
-  const typeBox=document.querySelector('[data-group="type"]');const free=typeBox.firstChild;['마음','RT','멘션','일상','앓이','짤뽑','맞팔','구독'].forEach((l,i)=>typeBox.insertBefore(pill(l,'type-'+i),free));
+  const typeBox=document.querySelector('[data-group="type"]');['마음','RT','멘션','일상','앓이','짤뽑','맞팔'].forEach((l,i)=>typeBox.appendChild(pill(l,'type-'+i)));
   const others=$('#others');
   for(let i=1;i<=3;i++){const r=document.createElement('div');r.className='orow';r.innerHTML=`<span class="n">0${i}</span><span class="tg"></span><span class="pair"><input class="fld" id="f-o${i}a" maxlength="12" autocomplete="off" aria-label="그 외 드림 ${i} 첫 번째"><span class="x">×</span><input class="fld" id="f-o${i}b" maxlength="12" autocomplete="off" aria-label="그 외 드림 ${i} 두 번째"></span>`;const tg=r.querySelector('.tg');['BL','HL','GL'].forEach((l,j)=>tg.append(chk(l,`o${i}-${j}`,true)));others.append(r);}
   const warn='<svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1L13 12H1Z" stroke="#C2A061" stroke-width="1.3"/><path d="M7 5V8.5M7 9.8V10.8" stroke="#C2A061" stroke-width="1.3"/></svg>';
