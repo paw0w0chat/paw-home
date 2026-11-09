@@ -55,7 +55,7 @@ export function DreamBrowser({ dreams, groups, personas }: { dreams: Dream[]; gr
                     </div>
                   </div>
                   <div className="card-name" style={{ paddingTop: 0 }}>
-                    <span className="display" style={{ fontSize: 28 }}>{d.characterEn}</span>
+                    <span className="display fit-name" style={{ "--len": d.characterEn.length, "--max": "28px" } as React.CSSProperties}>{d.characterEn}</span>
                     <span className="ko" style={{ fontSize: 17 }}>{d.characterKo} × {persona?.nameKo ?? ""}</span>
                   </div>
                   {d.note ? (

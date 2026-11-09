@@ -313,3 +313,12 @@ textarea.admin-input { resize: vertical; }
 }
 /* 상세에서는 자르지 않고 원본 비율 그대로 */
 .tool-preview img { width: 100%; height: auto; max-height: 80vh; object-fit: contain; border: var(--line-thin); background: #fff; }
+
+/* ── 긴 코드네임 자동 맞춤: 칸 너비에 맞춰 글자 크기를 줄인다 ── */
+.card-name, .detail-name { container-type: inline-size; }
+.card-name .fit-name, .detail-name .fit-name {
+  --max: 32px;
+  /* 확장형 Archivo 굵은 대문자는 글자당 약 1.5em */
+  font-size: min(var(--max), calc(100cqi / (var(--len, 6) * 1.5)));
+  white-space: nowrap;
+}

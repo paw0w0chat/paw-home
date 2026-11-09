@@ -40,7 +40,7 @@ export function PersonaCard({ persona, world, dark = false }: { persona: Persona
         {cover ? <img src={cover} alt="" loading="lazy" /> : <span aria-hidden="true">[대표 이미지]</span>}
       </div>
       <div className="card-name">
-        <span className="display">{persona.codename}</span>
+        <span className="display fit-name" style={{ "--len": persona.codename.length } as React.CSSProperties}>{persona.codename}</span>
         <span className="ko">{persona.nameKo}</span>
       </div>
       {metaText ? (

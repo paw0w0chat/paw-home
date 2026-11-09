@@ -69,7 +69,7 @@ export default async function PersonaDetailPage({ params }: Props) {
               <span className="tag tag-solid">{serial("P", persona.order)}</span>
               {world ? <span className="tag">WORLD / {world.title}</span> : null}
             </div>
-            <h1 className="display">{persona.codename}</h1>
+            <h1 className="display fit-name" style={{ "--len": persona.codename.length, "--max": "clamp(56px, 7vw, 112px)" } as React.CSSProperties}>{persona.codename}</h1>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 12 }}>
               <span className="ko">{persona.nameKo}</span>
               {persona.nameAlt ? <span className="mono muted" style={{ fontSize: 14 }}>{persona.nameAlt}</span> : null}
@@ -123,7 +123,7 @@ export default async function PersonaDetailPage({ params }: Props) {
           <div className="note-row">
             {dreams.map((d) => (
               <Link key={d.id} href="/dreams" className="note-box" style={{ flexDirection: "row", alignItems: "center", gap: 16, background: "var(--offwhite)", textDecoration: "none", flex: "1 1 280px" }}>
-                <span className="display" style={{ fontSize: 28, lineHeight: 1 }}>{d.characterEn}</span>
+                <span className="display" style={{ fontSize: d.characterEn.length > 8 ? 20 : 28, lineHeight: 1 }}>{d.characterEn}</span>
                 <Star size={18} />
                 <span style={{ fontSize: 15, fontWeight: 700 }}>{d.characterKo} × {persona.nameKo}</span>
                 <span className="tag" style={{ marginLeft: "auto" }}>{DREAM_STATUS_LABEL[d.status]}</span>
