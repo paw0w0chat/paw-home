@@ -135,6 +135,23 @@ function NavButton({ active, en, ko, count, onClick }: { active: boolean; en: st
 
 type Draft = { id: string; isNew: boolean; isPublic: boolean; order: string; values: Record<string, string> };
 
+/**
+ * 순서 끼워넣기: target 번호에 이미 항목이 있으면 그 항목을 +1,
+ * 밀려난 자리에 또 항목이 있으면 그것도 +1 … 빈 번호를 만날 때까지만 민다.
+ * (중간에 빈 번호가 있으면 그 뒤 항목은 건드리지 않는다)
+ */
+function shiftOrders(others: Row[], target: number): { id: string; order: number }[] {
+  const sorted = others.filter((r) => r.order >= target).sort((a, b) => a.order - b.order);
+  const changes: { id: string; order: number }[] = [];
+  let next = target + 1;
+  for (const r of sorted) {
+    if (r.order >= next) break;
+    changes.push({ id: r.id, order: next });
+    next += 1;
+  }
+  return changes;
+}
+
 function emptyDraft(section: Section, rows: Row[]): Draft {
   const values: Record<string, string> = {};
   for (const f of section.fields) {
@@ -199,10 +216,16 @@ function CollectionEditor({ section, store, reload, publish, notify, token }: {
 
     setBusy(true);
     try {
-      await setDoc(doc(getDb(), section.id, id), data);
+      // 같은 순서 번호가 이미 있으면, 그 번호부터 이어진 항목들을 1씩 뒤로 민다
+      const shifts = shiftOrders(rows.filter((r) => r.id !== id), data.order as number);
+      const db = getDb();
+      const batch = writeBatch(db);
+      batch.set(doc(db, section.id, id), data);
+      for (const sh of shifts) batch.update(doc(db, section.id, sh.id), { order: sh.order });
+      await batch.commit();
       await reload();
       setDraft((d) => ({ ...d, id, isNew: false }));
-      await publish("저장되었습니다");
+      await publish(shifts.length ? `저장되었습니다 · ${shifts.length}개 항목 순서가 1씩 밀렸어요` : "저장되었습니다");
     } catch (e) {
       notify("저장하지 못했어요", "error");
       setError(`저장 실패: ${(e as Error).message}`);
@@ -272,7 +295,7 @@ function CollectionEditor({ section, store, reload, publish, notify, token }: {
             ) : null}
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <FormRow id="f-order" label="정렬 순서" hint="숫자가 클수록 최신">
+              <FormRow id="f-order" label="정렬 순서" hint="숫자가 클수록 최신 · 이미 있는 번호를 넣으면 기존 항목이 1씩 뒤로 밀려요">
                 <input id="f-order" className="admin-input" type="number" value={draft.order} onChange={(e) => setDraft((d) => ({ ...d, order: e.target.value }))} style={{ width: 120 }} />
               </FormRow>
               <FormRow id="f-public" label="공개 여부">
