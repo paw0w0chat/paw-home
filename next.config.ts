@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // public/apps/<이름>/index.html 을 /apps/<이름> 주소로 연다 (트친소표 같은 단독 페이지)
+  async rewrites() {
+    return [{ source: "/apps/:name", destination: "/apps/:name/index.html" }];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },

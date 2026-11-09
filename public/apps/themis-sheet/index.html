@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>THEMIS 트친소표 — PAWCAT</title>
+<style>[hidden]{display:none!important}html,body{margin:0}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Inter:wght@900&family=Jost:wght@300;500&family=Pinyon+Script&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: a fixed 1600×900 THEMIS card (navy ground, three paper panels) scaled to fit, with an editing toolbar above it. Single dark look by choice. */
+:root{
+  color-scheme: dark;
+  --page:#091118; --page-2:#0F1A22; --page-fg:#E3E8EC; --page-muted:#8693A0; --page-line:#22313D;
+  --navy:#0E1A23; --navy-2:#13212B; --paper:#F3F3F0; --ink:#1D2229; --slate:#4A5361; --muted:#8A929C;
+  --line:#C3C8CD; --slot:#D6D9DC; --gold:#B08D52; --gold-2:#C2A061; --steel:#A9B4BF; --green:#5E9C7F; --hint:#B3B9BF;
+  --kr:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --jost:"Jost","Futura","Helvetica Neue",sans-serif;
+  --script:"Pinyon Script","Snell Roundhand",cursive;
+  --serif:"Cormorant Garamond","Garamond",Georgia,serif;
+  --black:"Inter","Helvetica Neue",Arial,sans-serif;
+}
+body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;max-width:1640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+
+/* ---------- toolbar ---------- */
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px}
+.brand{display:flex;flex-direction:column;gap:4px;min-width:0}
+.brand h1{margin:0;font:700 18px/1.2 var(--kr);letter-spacing:.01em;text-wrap:balance}
+.brand h1 span{font:500 10px var(--mono);letter-spacing:.28em;color:var(--gold-2);margin-left:10px;vertical-align:middle}
+.brand p{margin:0;font-size:12.5px;color:var(--page-muted);line-height:1.55}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--page-line);border-radius:999px;overflow:hidden}
+.btn{appearance:none;border:1px solid var(--page-line);background:var(--page-2);color:var(--page-fg);font:500 12.5px var(--kr);padding:9px 14px;border-radius:999px;cursor:pointer;line-height:1}
+.seg .btn{border:0;border-radius:0;background:transparent;color:var(--page-muted);padding:9px 12px}
+.seg .btn[aria-pressed="true"]{background:var(--page-line);color:var(--page-fg)}
+.btn:hover{border-color:#3A4B5A}
+.btn:focus-visible,.chk:focus-visible,.pill:focus-visible,.slot:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+.btn.primary{background:var(--gold-2);border-color:var(--gold-2);color:#16120A;font-weight:700;padding:10px 18px;letter-spacing:.02em}
+.btn.primary:hover{background:#D3B375}
+.btn.primary[disabled]{opacity:.6;cursor:progress}
+.btn.danger{color:#E9A79A;border-color:#5A3330}
+.confirm{display:inline-flex;gap:6px;align-items:center;font-size:12.5px;color:#E9A79A}
+
+/* ---------- stage ---------- */
+.stage{position:relative;width:100%;border:1px solid var(--page-line);background:#060C11}
+.stage.zoomed{overflow:auto;max-height:80vh}
+.scaler{position:relative}
+.note{font-size:12px;color:var(--page-muted);line-height:1.6;margin:0}
+.note b{color:var(--page-fg);font-weight:500}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--page-2);border:1px solid var(--page-line);color:var(--page-fg);font-size:13px;padding:10px 16px;border-radius:999px;z-index:30;max-width:calc(100% - 32px)}
+
+/* ---------- card ---------- */
+.card{position:absolute;left:0;top:0;width:1600px;height:900px;background:var(--navy);overflow:hidden;transform-origin:0 0;font-family:var(--kr);color:var(--ink)}
+.card *{box-sizing:border-box}
+.bgsvg{position:absolute;left:0;top:0;width:1600px;height:900px}
+.hd{position:absolute;left:44px;top:24px;width:1512px;height:72px}
+.hd .emb{position:absolute;left:0;top:12px;width:48px;height:48px}
+.hd .logo{position:absolute;left:62px;top:9px;font:900 40px/1.2 var(--black);letter-spacing:-.06em;color:var(--paper)}
+.hd .vr{position:absolute;left:232px;top:16px;width:1px;height:40px;background:rgba(238,241,243,.25)}
+.hd .t1{position:absolute;left:252px;top:10px;font:700 22px/1.3 var(--kr);color:var(--paper)}
+.hd .t2{position:absolute;left:252px;top:44px;font:500 10px/1.2 var(--mono);letter-spacing:.3em;color:var(--gold-2)}
+.hd .t3{position:absolute;left:830px;top:28px;font:500 12px/1.2 var(--jost);letter-spacing:.32em;color:var(--steel)}
+.hd .tpill{position:absolute;right:0;top:15px;height:42px;display:flex;align-items:center;gap:10px;padding:0 20px 0 18px;border:1px solid rgba(238,241,243,.35);border-radius:40px;font:600 11px var(--mono);letter-spacing:.25em;color:var(--paper)}
+.hd .tpill i{width:7px;height:7px;border-radius:50%;background:var(--green);display:block}
+
+.panel{position:absolute;top:120px;height:700px;background:var(--paper);padding:26px 28px 28px;display:flex;flex-direction:column;justify-content:space-between}
+.p1{left:44px;width:456px}.p2{left:516px;width:520px}.p3{left:1052px;width:504px}
+.meta{display:flex;justify-content:space-between;align-items:center;font:500 10px/1.4 var(--mono);letter-spacing:.22em;color:var(--muted)}
+.meta .no{display:flex;align-items:center;gap:6px;letter-spacing:.12em}
+.meta .no .fld{width:76px;height:16px;font:500 10px var(--mono);letter-spacing:.08em}
+.head{display:flex;align-items:center;gap:10px}
+.head b{font:700 14px/1.3 var(--kr);color:var(--ink)}
+.head small{font:500 10px var(--mono);letter-spacing:.22em;color:var(--muted)}
+.head .ln{flex:1;height:1px;background:var(--line)}
+.head .rt{font-size:10px;color:var(--muted)}
+
+/* fields */
+.fld{display:block;width:100%;border:0;border-bottom:1px solid rgba(29,34,41,.45);background:transparent;color:var(--ink);font:500 15px var(--kr);padding:0 4px;outline:none;border-radius:0;min-width:0}
+.fld::placeholder{color:var(--hint);font-weight:400}
+.fld:hover{background:rgba(176,141,82,.05)}
+.fld:focus{border-bottom-color:var(--gold);background:rgba(176,141,82,.09)}
+.as-text{display:flex;align-items:center;white-space:nowrap;overflow:hidden}
+
+/* checkbox + pills */
+.chk{display:inline-flex;align-items:center;gap:6px;font:500 13px/1.3 var(--kr);color:var(--slate);cursor:pointer;user-select:none;outline:none}
+.chk .box{width:11px;height:11px;border:1.2px solid var(--slate);display:flex;align-items:center;justify-content:center;flex:none}
+.chk .box i{width:5px;height:5px;background:var(--ink);display:none}
+.chk[aria-checked="true"]{color:var(--ink);font-weight:700}
+.chk[aria-checked="true"] .box{border-color:var(--ink)}
+.chk[aria-checked="true"] .box i{display:block}
+.chk.sm{font-size:11px;gap:5px}.chk.sm .box{width:10px;height:10px}.chk.sm .box i{width:4px;height:4px}
+.pill{display:inline-flex;align-items:center;padding:5px 14px;border:1px solid rgba(74,83,97,.7);border-radius:30px;font:500 13px/1.3 var(--kr);color:var(--slate);cursor:pointer;user-select:none;outline:none}
+.pill[aria-checked="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.pill.free{border-style:dashed;padding:3px 10px;cursor:text}
+.pill.free .fld{width:84px;height:20px;border-bottom:0;font-size:13px;text-align:center;padding:0}
+
+/* image slots */
+.slot{position:relative;background-color:var(--slot);background-repeat:no-repeat;background-size:cover;background-position:50% 50%;cursor:pointer;overflow:hidden;outline:none;touch-action:none}
+.slot .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none}
+.slot .ph span{font:500 10px var(--mono);letter-spacing:.2em;color:var(--muted)}
+.slot .ph em{font-style:normal;font-size:11px;color:var(--slate);background:rgba(243,243,240,.7);padding:3px 8px;border-radius:20px}
+.slot.has .ph{display:none}
+.slot.has{cursor:grab}
+.slot.drag{cursor:grabbing}
+.slot.over{box-shadow:inset 0 0 0 3px var(--gold)}
+.slot .rm{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(19,33,43,.85);color:var(--paper);font:500 15px/26px var(--kr);cursor:pointer;display:none;padding:0}
+.slot.has .rm{display:block}
+.nameplate{position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:8px;padding:7px 14px 7px 12px;background:var(--navy-2);font:600 11px var(--mono);letter-spacing:.24em;color:var(--paper)}
+
+/* panel 1 */
+.s1{width:400px;height:250px}
+.nick{display:flex;flex-direction:column;gap:6px}
+.ttl{display:flex;align-items:flex-end;justify-content:space-between}
+.st{display:flex;align-items:flex-end}
+.st .cap{font:400 62px/1 var(--script);color:var(--gold)}
+.st .rest{font:500 24px/1 var(--jost);letter-spacing:.14em;color:var(--ink);padding-bottom:12px;margin-left:-4px}
+.ttl .kr{font:500 12px var(--kr);color:var(--muted);padding-bottom:12px}
+.f-nick{height:40px;font:700 24px var(--kr)}
+.handle{display:flex;align-items:center;gap:6px;font:500 13px var(--mono);color:var(--muted)}
+.handle .fld{height:24px;font:500 13px var(--mono);border-bottom-style:dashed;border-bottom-color:var(--line)}
+.aff{display:flex;flex-direction:column;gap:2px}
+.row{display:flex;gap:8px;padding:9px 0;border-bottom:1px dashed var(--line);align-items:center}
+.row.top{align-items:flex-start}
+.row .lb{width:56px;flex:none;font:700 12px/1.6 var(--kr);color:var(--ink)}
+.opts{display:flex;flex-wrap:wrap;gap:8px 14px;flex:1;min-width:0;align-items:center}
+.opts .fld.etc{width:84px;height:18px;font-size:12px}
+.row .fld.other{height:20px;font-size:13px;border-bottom:0}
+
+/* panel 2 */
+.d-ttl .cap{font-size:76px}
+.d-ttl .rest{font-size:30px;padding-bottom:14px}
+.d-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;padding-bottom:12px}
+.d-right .it{font:italic 500 17px var(--serif);color:var(--slate)}
+.d-right .ex{font-size:11px;color:var(--muted)}
+.couple{display:flex;flex-direction:column;gap:10px}
+.cimgs,.cnames{display:flex;justify-content:space-between;align-items:center}
+.s2{width:190px;height:190px}
+.mid{display:flex;flex-direction:column;align-items:center;gap:6px;width:52px}
+.mid .xc{width:52px;height:52px;border:1.2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font:500 30px/1 var(--serif);color:var(--gold)}
+.mid small{font:600 9px var(--mono);letter-spacing:.3em;color:var(--gold)}
+.cname{width:190px;display:flex;flex-direction:column;gap:5px}
+.cname .fld{height:30px;font:700 16px var(--kr);text-align:center}
+.cname small{font:500 9px var(--mono);letter-spacing:.28em;color:var(--muted)}
+.ctypes{display:flex;justify-content:center;gap:16px;padding-top:2px}
+.ctypes .chk{font-size:12px}
+.other{display:flex;flex-direction:column}
+.orow{display:flex;align-items:flex-end;gap:12px;padding-top:8px}
+.orow .n{font:600 11px var(--mono);color:var(--gold);padding-bottom:7px}
+.orow .tg{display:flex;gap:9px;padding-bottom:8px}
+.orow .pair{flex:1;display:flex;align-items:flex-end;gap:6px;min-width:0}
+.orow .pair .fld{height:32px;font-size:14px;text-align:center}
+.orow .pair .x{font:500 18px/1 var(--serif);color:var(--muted);padding-bottom:7px}
+.open{display:flex;align-items:center;gap:8px}
+.open b{font:700 12px var(--kr);padding-right:4px;color:var(--ink)}
+.open .pill{font-size:12px;padding:5px 12px}
+
+/* panel 3 */
+.ty{display:flex;flex-direction:column;gap:12px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.blk{display:flex;flex-direction:column}
+.bh{display:flex;align-items:center;gap:14px;padding-bottom:4px}
+.bh .num{font:300 44px/1 var(--jost);letter-spacing:-.02em;color:var(--steel)}
+.bh .en{font:500 19px var(--jost);letter-spacing:.16em;color:var(--ink)}
+.bh .ng{display:flex;align-items:center;gap:8px;padding:5px 14px 5px 12px;background:var(--navy-2);font:500 17px var(--jost);letter-spacing:.18em;color:var(--gold-2)}
+.bh .kr{font-size:12px;color:var(--muted)}
+.bh .ln{flex:1;height:1px;background:var(--line)}
+.bh .pl{font:500 14px var(--mono);color:var(--muted)}
+.blk .fld{height:34px;font-size:14.5px;border-bottom-color:rgba(29,34,41,.4)}
+
+.ft{position:absolute;left:44px;top:840px;width:1512px;height:36px}
+.ft .gl{position:absolute;left:0;top:18px;width:56px;height:1px;background:var(--gold-2)}
+.ft .z{position:absolute;left:70px;top:11px;font:500 10px var(--mono);letter-spacing:.28em;color:var(--steel)}
+.ft .c{position:absolute;left:456px;top:9px;width:600px;text-align:center;font-size:12px;color:var(--muted)}
+.ft .cta{position:absolute;right:0;top:0;height:36px;display:flex;align-items:center;gap:14px;padding:0 22px;background:#1A2630;border:1px solid rgba(194,160,97,.8);font:600 11px var(--mono);letter-spacing:.3em;color:var(--gold-2)}
+
+/* export overlay */
+.ov{position:fixed;inset:0;z-index:40;background:rgba(5,9,13,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:calc(20px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.ov img{max-width:100%;max-height:72vh;border:1px solid var(--page-line)}
+.ov p{margin:0;font-size:13px;color:var(--page-fg);text-align:center;line-height:1.6}
+@media (prefers-reduced-motion:no-preference){.toast{transition:opacity .2s}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="bar">
+    <div class="brand">
+      <h1>THEMIS 트친소표<span>AGENT REGISTRATION FORM</span></h1>
+      <p>칸을 눌러 바로 입력하고, 이미지 칸을 눌러 사진을 올리세요. 올린 사진은 드래그해서 위치를 맞출 수 있어요.</p>
+    </div>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="보기 크기">
+        <button class="btn" id="zFit" aria-pressed="true">화면 맞춤</button>
+        <button class="btn" id="z100" aria-pressed="false">100%</button>
+      </div>
+      <span id="resetWrap"><button class="btn danger" id="reset">전부 지우기</button></span>
+      <button class="btn primary" id="save">이미지로 저장</button>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="scaler" id="scaler">
+      <div class="card" id="card">
+        <svg class="bgsvg" id="bgsvg" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+
+        <div class="hd">
+          <svg class="emb" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="24" cy="24" r="22.5" stroke="#C2A061" stroke-width="1.5"/><circle cx="24" cy="24" r="18.5" stroke="#C2A061" stroke-width="1" stroke-dasharray="1.5 3"/><path d="M24 12V35M16 35H32M14 17H34" stroke="#C2A061" stroke-width="1.6"/><circle cx="24" cy="12" r="1.8" fill="#C2A061"/><path d="M14 17L10.5 25H17.5L14 17ZM34 17L30.5 25H37.5L34 17Z" stroke="#C2A061" stroke-width="1.2" stroke-linejoin="round"/><path d="M10 25C10.5 28 17.5 28 18 25M30 25C30.5 28 37.5 28 38 25" stroke="#C2A061" stroke-width="1.2"/></svg>
+          <div class="logo">THEMIS</div>
+          <div class="vr"></div>
+          <div class="t1">트친소표</div>
+          <div class="t2">AGENT REGISTRATION FORM</div>
+          <div class="t3">UNITED STATES DIVISION&nbsp;&nbsp;·&nbsp;&nbsp;2036</div>
+          <div class="tpill"><i></i>TEAM CONSENTES</div>
+        </div>
+
+        <!-- PANEL 01 -->
+        <section class="panel p1">
+          <div class="meta"><span>ZONE 01&nbsp;&nbsp;/&nbsp;&nbsp;AGENT FILE</span><span class="no">No.<input class="fld" id="f-no" maxlength="10" autocomplete="off"></span></div>
+          <div class="slot s1" id="img-profile" tabindex="0" role="button" aria-label="프로필 이미지 올리기">
+            <div class="ph"><svg width="26" height="26" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="11" stroke="#8A929C" stroke-width="2"/><path d="M24 0V15M24 33V48M0 24H15M33 24H48" stroke="#8A929C" stroke-width="2"/></svg><span>PROFILE IMAGE</span><em data-html2canvas-ignore>눌러서 이미지 올리기</em></div>
+            <button class="rm" data-html2canvas-ignore aria-label="이미지 지우기">×</button>
+            <div class="nameplate"><svg width="8" height="8" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><path d="M4 0L8 4L4 8L0 4Z" fill="#C2A061"/></svg>AGENT</div>
+          </div>
+          <div class="nick">
+            <div class="ttl"><div class="st"><span class="cap">N</span><span class="rest">ICKNAME</span></div><span class="kr">닉네임</span></div>
+            <input class="fld f-nick" id="f-nick" maxlength="20" placeholder="닉네임" autocomplete="off">
+            <div class="handle">@<input class="fld" id="f-handle" maxlength="24" placeholder="아이디" autocomplete="off"></div>
+          </div>
+          <div class="aff">
+            <div class="head"><b>소속</b><small>AFFILIATION</small><span class="ln"></span></div>
+            <div class="row"><span class="lb">지부</span><div class="opts" data-group="branch"></div></div>
+            <div class="row top"><span class="lb">계보</span><div class="opts" data-group="line"></div></div>
+            <div class="row"><span class="lb">포지션</span><div class="opts" data-group="pos"><input class="fld etc" id="f-pos-etc" maxlength="12" autocomplete="off" aria-label="포지션 기타 입력"></div></div>
+            <div class="row"><span class="lb">그 외</span><input class="fld other" id="f-aff-etc" maxlength="34" placeholder="등급, 각인, 페르소나 등" autocomplete="off"></div>
+          </div>
+        </section>
+
+        <!-- PANEL 02 -->
+        <section class="panel p2">
+          <div class="meta"><span>ZONE 02&nbsp;&nbsp;/&nbsp;&nbsp;MAIN DREAM</span><span>메인 드림&nbsp;&nbsp;·&nbsp;&nbsp;커플 표기</span></div>
+          <div class="ttl d-ttl">
+            <div class="st"><span class="cap">D</span><span class="rest">REAM</span></div>
+            <div class="d-right"><span class="it">in the name of Themis</span><span class="ex">예) 캐릭터 × 페르소나</span></div>
+          </div>
+          <div class="couple">
+            <div class="cimgs">
+              <div class="slot s2" id="img-a" tabindex="0" role="button" aria-label="메인 드림 이미지 A 올리기">
+                <div class="ph"><svg width="26" height="26" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="11" stroke="#8A929C" stroke-width="2"/><path d="M24 0V15M24 33V48M0 24H15M33 24H48" stroke="#8A929C" stroke-width="2"/></svg><span>IMAGE A</span><em data-html2canvas-ignore>눌러서 올리기</em></div>
+                <button class="rm" data-html2canvas-ignore aria-label="이미지 지우기">×</button>
+              </div>
+              <div class="mid"><div class="xc">×</div><small>MAIN</small></div>
+              <div class="slot s2" id="img-b" tabindex="0" role="button" aria-label="메인 드림 이미지 B 올리기">
+                <div class="ph"><svg width="26" height="26" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="11" stroke="#8A929C" stroke-width="2"/><path d="M24 0V15M24 33V48M0 24H15M33 24H48" stroke="#8A929C" stroke-width="2"/></svg><span>IMAGE B</span><em data-html2canvas-ignore>눌러서 올리기</em></div>
+                <button class="rm" data-html2canvas-ignore aria-label="이미지 지우기">×</button>
+              </div>
+            </div>
+            <div class="cnames">
+              <div class="cname"><input class="fld" id="f-char" maxlength="14" placeholder="캐릭터" autocomplete="off"><small>CHARACTER</small></div>
+              <div class="cname"><input class="fld" id="f-pers" maxlength="14" placeholder="페르소나" autocomplete="off"><small>PERSONA</small></div>
+            </div>
+            <div class="ctypes" data-group="ctype"></div>
+          </div>
+          <div class="other">
+            <div class="head"><b>그 외 드림</b><small>OTHER</small><span class="ln"></span></div>
+            <div id="others"></div>
+          </div>
+          <div class="open" data-group="open" data-single="1"><b>드림 오픈</b></div>
+        </section>
+
+        <!-- PANEL 03 -->
+        <section class="panel p3">
+          <div class="meta"><span>ZONE 03&nbsp;&nbsp;/&nbsp;&nbsp;PROFILE NOTE</span><span>교류&nbsp;&nbsp;·&nbsp;&nbsp;취향</span></div>
+          <div class="ty">
+            <div class="head"><b>교류 성향</b><small>TYPE</small><span class="ln"></span><span class="rt">해당 항목 선택</span></div>
+            <div class="pills" data-group="type"><span class="pill free"><input class="fld" id="f-type-etc" maxlength="8" placeholder="직접 입력" autocomplete="off" aria-label="교류 성향 직접 입력"></span></div>
+          </div>
+          <div class="blk" id="blk-like"></div>
+          <div class="blk" id="blk-ng"></div>
+          <div class="blk" id="blk-about"></div>
+        </section>
+
+        <div class="ft">
+          <div class="gl"></div>
+          <div class="z">ZONE 00&nbsp;&nbsp;/&nbsp;&nbsp;FRIEND REQUEST</div>
+          <div class="c">빈칸을 채워 트친소에 사용해 주세요&nbsp;&nbsp;·&nbsp;&nbsp;화면을 누르면 접속합니다</div>
+          <div class="cta">CLICK TO CONNECT<span>↗</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note">저장하면 <b>3200×1800 PNG</b>로 만들어져요. 입력한 내용은 이 브라우저에만 임시 저장되고, 다른 사람에게는 보이지 않아요. 휴대폰에서는 <b>100%</b>로 바꾸고 옆으로 밀면서 입력하면 편해요.</p>
+</div>
+
+<input type="file" id="file" accept="image/*" hidden>
+<div class="toast" id="toast" hidden></div>
+<div class="ov" id="ov" hidden>
+  <img id="ovImg" alt="완성된 트친소표 이미지">
+  <p>여기서는 바로 내려받을 수 없어요. 이미지를 <b>길게 누르거나 우클릭</b>해서 저장해 주세요. <small id="ovCode" style="color:var(--page-muted)"></small></p>
+  <button class="btn" id="ovClose">닫기</button>
+</div>
+
+<script src="/apps/themis-sheet/html2canvas.min.js"></script>
+<script>
+(function(){
+  const $=s=>document.querySelector(s);
+  const KEY='themis-ttsp-v1';
+
+  /* ---------- background art ---------- */
+  (function bg(){
+    let g='';for(let x=48;x<1600;x+=48)g+=`M${x} 0V900`;for(let y=48;y<900;y+=48)g+=`M0 ${y}H1600`;
+    let tk='';const R=560,cx=800,cy=470;
+    for(let i=0;i<72;i++){const a=i*5*Math.PI/180,c=Math.cos(a),s=Math.sin(a);tk+=`<line x1="${(cx+c*R).toFixed(1)}" y1="${(cy+s*R).toFixed(1)}" x2="${(cx+c*(R-14)).toFixed(1)}" y2="${(cy+s*(R-14)).toFixed(1)}"/>`;}
+    $('#bgsvg').innerHTML=
+      `<path d="${g}" stroke="#FFFFFF" stroke-opacity="0.035" stroke-width="1" fill="none"/>`+
+      `<polygon points="1120,0 1190,0 930,900 860,900" fill="#6E8296" fill-opacity="0.18"/><polygon points="1215,0 1250,0 990,900 955,900" fill="#A9B4BF" fill-opacity="0.12"/><polygon points="1290,0 1420,0 1160,900 1030,900" fill="#6E8296" fill-opacity="0.10"/><polygon points="0,560 0,900 260,900" fill="#2A3846" fill-opacity="0.6"/><polygon points="1600,0 1600,260 1420,0" fill="#2A3846" fill-opacity="0.6"/>`+
+      `<g stroke="#C2A061" stroke-opacity="0.45" stroke-width="3">${tk}</g><circle cx="800" cy="470" r="590" stroke="#FFFFFF" stroke-opacity="0.08" fill="none"/><circle cx="800" cy="470" r="520" stroke="#FFFFFF" stroke-opacity="0.06" stroke-dasharray="2 6" fill="none"/>`+
+      `<path d="M9 32V9H32M1568 9H1591V32M1591 868V891H1568M32 891H9V868" stroke="#EEF1F3" stroke-opacity="0.35" stroke-width="1.5" fill="none"/>`;
+  })();
+
+  /* ---------- build repeated parts ---------- */
+  function chk(label,key,sm){const e=document.createElement('span');e.className='chk'+(sm?' sm':'');e.setAttribute('role','checkbox');e.setAttribute('aria-checked','false');e.tabIndex=0;e.dataset.k=key;e.innerHTML='<span class="box"><i></i></span>';e.append(label);return e;}
+  function pill(label,key){const e=document.createElement('span');e.className='pill';e.setAttribute('role','checkbox');e.setAttribute('aria-checked','false');e.tabIndex=0;e.dataset.k=key;e.textContent=label;return e;}
+  const groups={branch:['US','KOREA'],line:['올림포스','티탄','타르타로스','프로토게노이','크세노스'],pos:['SENTINEL','GUIDE','기타'],ctype:['BL','HL','GL','NL','기타']};
+  for(const [g,list] of Object.entries(groups)){const box=document.querySelector(`[data-group="${g}"]`);const first=box.firstChild;list.forEach((l,i)=>box.insertBefore(chk(l,g+'-'+i),g==='pos'?first:null));}
+  const openBox=document.querySelector('[data-group="open"]');['전체 오픈','일부 오픈','비공개','캐릭터마다'].forEach((l,i)=>openBox.append(pill(l,'open-'+i)));
+  const typeBox=document.querySelector('[data-group="type"]');const free=typeBox.firstChild;['마음','RT','멘션','일상','앓이','짤뽑','맞팔','구독'].forEach((l,i)=>typeBox.insertBefore(pill(l,'type-'+i),free));
+  const others=$('#others');
+  for(let i=1;i<=3;i++){const r=document.createElement('div');r.className='orow';r.innerHTML=`<span class="n">0${i}</span><span class="tg"></span><span class="pair"><input class="fld" id="f-o${i}a" maxlength="12" autocomplete="off" aria-label="그 외 드림 ${i} 첫 번째"><span class="x">×</span><input class="fld" id="f-o${i}b" maxlength="12" autocomplete="off" aria-label="그 외 드림 ${i} 두 번째"></span>`;const tg=r.querySelector('.tg');['BL','HL','GL'].forEach((l,j)=>tg.append(chk(l,`o${i}-${j}`,true)));others.append(r);}
+  const warn='<svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1L13 12H1Z" stroke="#C2A061" stroke-width="1.3"/><path d="M7 5V8.5M7 9.8V10.8" stroke="#C2A061" stroke-width="1.3"/></svg>';
+  [['like','01','LIKE','좋아하는 것','좋아하는 캐릭터, 소재, 교류 방식 등'],['ng','02','NG','피해 주세요','지뢰, 불편한 소재 등'],['about','03','ABOUT','자유 소개','하고 싶은 말']].forEach(([id,n,en,kr,ph])=>{
+    const b=$('#blk-'+id);
+    b.innerHTML=`<div class="bh"><span class="num">${n}</span>${id==='ng'?`<span class="ng">${warn}NG</span>`:`<span class="en">${en}</span>`}<span class="kr">${kr}</span><span class="ln"></span><span class="pl">+</span></div>`+
+      [1,2,3].map(k=>`<input class="fld" id="f-${id}${k}" maxlength="34" ${k===1?`placeholder="${ph}"`:''} autocomplete="off" aria-label="${kr} ${k}번째 줄">`).join('');
+  });
+
+  /* ---------- toggles ---------- */
+  function toggle(el){
+    const box=el.closest('[data-group]');const on=el.getAttribute('aria-checked')!=='true';
+    if(on&&box&&box.dataset.single)box.querySelectorAll('[role=checkbox]').forEach(x=>x.setAttribute('aria-checked','false'));
+    el.setAttribute('aria-checked',on?'true':'false');save();
+  }
+  document.addEventListener('click',e=>{const el=e.target.closest('.card [role=checkbox]');if(el)toggle(el);});
+  document.addEventListener('keydown',e=>{const el=e.target.closest&&e.target.closest('.card [role=checkbox]');if(el&&(e.key===' '||e.key==='Enter')){e.preventDefault();toggle(el);}});
+  document.addEventListener('input',e=>{if(e.target.matches('.card .fld'))save();});
+  document.querySelectorAll('.pill.free').forEach(p=>p.addEventListener('click',()=>p.querySelector('input').focus()));
+
+  /* ---------- images ---------- */
+  const imgs={};
+  const fileIn=$('#file');let target=null;
+  function readImage(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.naturalWidth,im.naturalHeight));const cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);const alpha=/png|gif|webp/.test(file.type);res({src:cv.toDataURL(alpha?'image/png':'image/jpeg',0.9),w:cv.width,h:cv.height,x:50,y:50});};im.onerror=()=>rej(new Error('img'));im.src=r.result;};r.onerror=()=>rej(new Error('read'));r.readAsDataURL(file);});}
+  function paint(slot){const d=imgs[slot.id];if(d){slot.style.backgroundImage=`url("${d.src}")`;slot.style.backgroundPosition=`${d.x}% ${d.y}%`;slot.classList.add('has');}else{slot.style.backgroundImage='';slot.classList.remove('has');}}
+  async function setFile(slot,file){if(!file||!/^image\//.test(file.type)){toast('이미지 파일만 올릴 수 있어요.');return;}try{imgs[slot.id]=await readImage(file);paint(slot);save();}catch(_){toast('이미지를 읽지 못했어요. 다른 파일로 시도해 주세요.');}}
+  fileIn.addEventListener('change',()=>{if(target&&fileIn.files[0])setFile(target,fileIn.files[0]);fileIn.value='';});
+  document.querySelectorAll('.slot').forEach(slot=>{
+    let st=null;
+    slot.querySelector('.rm').addEventListener('click',e=>{e.stopPropagation();delete imgs[slot.id];paint(slot);save();});
+    slot.addEventListener('pointerdown',e=>{if(e.target.closest('.rm'))return;st={x:e.clientX,y:e.clientY,moved:false,d:imgs[slot.id]?{...imgs[slot.id]}:null};if(st.d){slot.setPointerCapture(e.pointerId);slot.classList.add('drag');}});
+    slot.addEventListener('pointermove',e=>{if(!st||!st.d)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;if(Math.abs(dx)+Math.abs(dy)>4)st.moved=true;if(!st.moved)return;
+      const W=slot.offsetWidth,H=slot.offsetHeight,d=st.d,s=Math.max(W/d.w,H/d.h),ox=d.w*s-W,oy=d.h*s-H,k=scale;
+      const cur=imgs[slot.id];cur.x=ox>0?Math.min(100,Math.max(0,d.x-dx/k/ox*100)):50;cur.y=oy>0?Math.min(100,Math.max(0,d.y-dy/k/oy*100)):50;slot.style.backgroundPosition=`${cur.x}% ${cur.y}%`;});
+    const end=()=>{if(!st)return;slot.classList.remove('drag');if(st.moved)save();else{target=slot;fileIn.click();}st=null;};
+    slot.addEventListener('pointerup',end);slot.addEventListener('pointercancel',()=>{slot.classList.remove('drag');st=null;});
+    slot.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();target=slot;fileIn.click();}});
+    slot.addEventListener('dragover',e=>{e.preventDefault();slot.classList.add('over');});
+    slot.addEventListener('dragleave',()=>slot.classList.remove('over'));
+    slot.addEventListener('drop',e=>{e.preventDefault();slot.classList.remove('over');setFile(slot,e.dataTransfer.files[0]);});
+  });
+
+  /* ---------- draft storage (this browser only) ---------- */
+  let timer=null;
+  function save(){clearTimeout(timer);timer=setTimeout(()=>{
+    const s={f:{},c:[],i:imgs};
+    document.querySelectorAll('.card .fld').forEach(i=>{if(i.value)s.f[i.id]=i.value;});
+    document.querySelectorAll('.card [role=checkbox][aria-checked=true]').forEach(c=>s.c.push(c.dataset.k));
+    try{localStorage.setItem(KEY,JSON.stringify(s));}catch(_){try{localStorage.setItem(KEY,JSON.stringify({...s,i:{}}));}catch(__){}}
+  },300);}
+  function load(){let s=null;try{s=JSON.parse(localStorage.getItem(KEY)||'null');}catch(_){}if(!s)return;
+    for(const [id,v] of Object.entries(s.f||{})){const el=document.getElementById(id);if(el)el.value=v;}
+    (s.c||[]).forEach(k=>{const el=document.querySelector(`.card [data-k="${k}"]`);if(el)el.setAttribute('aria-checked','true');});
+    Object.assign(imgs,s.i||{});document.querySelectorAll('.slot').forEach(paint);}
+  load();
+
+  const rw=$('#resetWrap');
+  function resetUI(){rw.innerHTML='<button class="btn danger" id="reset">전부 지우기</button>';$('#reset').onclick=ask;}
+  function ask(){rw.innerHTML='<span class="confirm">입력한 내용과 이미지를 모두 지울까요? <button class="btn danger" id="rYes">지우기</button><button class="btn" id="rNo">취소</button></span>';
+    $('#rNo').onclick=resetUI;$('#rYes').onclick=()=>{document.querySelectorAll('.card .fld').forEach(i=>i.value='');document.querySelectorAll('.card [role=checkbox]').forEach(c=>c.setAttribute('aria-checked','false'));for(const k in imgs)delete imgs[k];document.querySelectorAll('.slot').forEach(paint);try{localStorage.removeItem(KEY);}catch(_){}resetUI();toast('모두 지웠어요.');};}
+  $('#reset').onclick=ask;
+
+  /* ---------- scaling ---------- */
+  const stage=$('#stage'),scaler=$('#scaler'),card=$('#card');let scale=1,zoom='fit';
+  function fit(){scale=zoom==='fit'?Math.min(1,stage.clientWidth/1600):1;card.style.transform=`scale(${scale})`;scaler.style.width=1600*scale+'px';scaler.style.height=900*scale+'px';stage.classList.toggle('zoomed',zoom!=='fit');}
+  let lastW=-1;new ResizeObserver(()=>{const w=stage.clientWidth;if(w!==lastW){lastW=w;requestAnimationFrame(fit);}}).observe(stage);fit();
+  $('#zFit').onclick=()=>{zoom='fit';$('#zFit').setAttribute('aria-pressed','true');$('#z100').setAttribute('aria-pressed','false');fit();};
+  $('#z100').onclick=()=>{zoom='100';$('#z100').setAttribute('aria-pressed','true');$('#zFit').setAttribute('aria-pressed','false');fit();};
+
+  /* ---------- toast ---------- */
+  let tt=null;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,3200);}
+
+  /* ---------- export ---------- */
+  let dl=null;
+  if(window.claude&&window.claude.use){window.claude.use('downloads').then(x=>{dl=x;}).catch(()=>{dl=null;});}
+  let ovUrl=null;
+  function showOverlay(blob,code){if(ovUrl)URL.revokeObjectURL(ovUrl);ovUrl=URL.createObjectURL(blob);$('#ovImg').src=ovUrl;$('#ovCode').textContent=code?`(${code})`:'';$('#ov').hidden=false;}
+  $('#ovClose').onclick=()=>{$('#ov').hidden=true;};
+  async function render(){
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    return html2canvas(card,{scale:2,backgroundColor:'#0E1A23',logging:false,scrollX:0,scrollY:0,width:1600,height:900,windowWidth:1600,windowHeight:900,
+      onclone:(doc)=>{
+        doc.querySelectorAll('body > style, body > link').forEach(n=>doc.head.appendChild(n));
+        const c=doc.getElementById('card');c.style.transform='none';c.style.position='relative';
+        doc.documentElement.style.padding='0';doc.body.style.margin='0';doc.body.style.background='#0E1A23';
+        doc.body.replaceChildren(c);
+        c.querySelectorAll('input').forEach(inp=>{const o=document.getElementById(inp.id);const d=doc.createElement('div');d.className=inp.className+' as-text';d.textContent=o?o.value:'';d.style.justifyContent=getComputedStyle(o||inp).textAlign==='center'?'center':'flex-start';inp.replaceWith(d);});
+      }});
+  }
+  $('#save').onclick=async()=>{
+    const b=$('#save');b.disabled=true;b.textContent='만드는 중…';
+    try{
+      const canvas=await render();
+      const nick=(document.getElementById('f-nick').value||'agent').replace(/[\\/:*?"<>|\s]+/g,'_').slice(0,30);
+      const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+      if(!blob||!canvas.width)throw new Error('empty');
+      if(dl){
+        try{await dl.save({filename:`THEMIS_트친소표_${nick}.png`,data:blob});toast('저장했어요.');}
+        catch(err){const c=err&&err.code;if(c==='declined')toast('저장을 취소했어요.');else if(c==='rate_limited')toast('잠시 후 다시 눌러 주세요.');else showOverlay(blob,c||'unknown');}
+      }else if(/KAKAOTALK|Instagram|FBAN|FBAV|Line\/|Twitter|NAVER/i.test(navigator.userAgent)){
+        // 앱 안 브라우저는 다운로드가 막히는 경우가 많아 이미지를 띄워 길게 눌러 저장하게 한다
+        showOverlay(blob,'in-app');
+      }else{
+        const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=`THEMIS_트친소표_${nick}.png`;
+        document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('저장했어요.');
+      }
+    }catch(_){toast('이미지를 만들지 못했어요. 새로고침 후 다시 시도해 주세요.');}
+    finally{b.disabled=false;b.textContent='이미지로 저장';}
+  };
+})();
+</script>
+
+</body></html>
