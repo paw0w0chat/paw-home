@@ -6,7 +6,7 @@ import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, updateDoc, writeBa
 import { COLLECTIONS, getDb, PROFILE_DOC, type CollectionName } from "@/lib/firebase";
 import { fromForm, SECTIONS, toForm, toSlug, type Field, type Section } from "@/lib/adminSchema";
 import * as seed from "@/data/seed";
-import type { Profile } from "@/lib/types";
+import type { Profile, ProfileSection } from "@/lib/types";
 import { ImageField } from "./ImageField";
 
 type Row = { id: string; isPublic: boolean; order: number; [key: string]: unknown };
@@ -359,25 +359,71 @@ function FormRow({ id, label, hint, children }: { id: string; label: string; hin
 
 // ───────────────── 프로필 편집 ─────────────────
 
+const SECTION_KINDS: { value: ProfileSection["kind"]; label: string }[] = [
+  { value: "pills", label: "알약 (성향 같은 짧은 단어)" },
+  { value: "list", label: "줄 목록 (소개 · 드림)" },
+  { value: "grid", label: "2열 상자 (좋아하는 것)" },
+  { value: "statement", label: "첫 줄 크게 + 목록 (드림 성향)" },
+  { value: "warn", label: "어두운 경고 상자 (NG)" },
+];
+
+type SectionDraft = { title: string; en: string; kind: ProfileSection["kind"]; items: string; note: string };
+
 function ProfileEditor({ onSaved, notify }: { onSaved: (m: string) => Promise<void>; notify: (m: string, kind?: "ok" | "error") => void }) {
   const [intro, setIntro] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [handle, setHandle] = useState("");
+  const [subline, setSubline] = useState("");
+  const [tagline, setTagline] = useState("");
+  const [sections, setSections] = useState<SectionDraft[]>([]);
   const [careers, setCareers] = useState("");
   const [links, setLinks] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     getDoc(doc(getDb(), ...PROFILE_DOC)).then((snap) => {
-      const p = (snap.data() ?? seed.profile) as Profile;
+      // 저장된 값이 없는 항목은 기본 데이터로 채운다 (사이트에 보이는 것과 같게)
+      const p = { ...seed.profile, ...((snap.data() ?? {}) as Partial<Profile>) } as Profile;
       setIntro(p.intro ?? "");
+      setNickname(p.nickname ?? "");
+      setHandle(p.handle ?? "");
+      setSubline(p.subline ?? "");
+      setTagline(p.tagline ?? "");
+      setSections((p.sections ?? []).map((x) => ({ title: x.title, en: x.en, kind: x.kind, items: x.items.join("\n"), note: x.note ?? "" })));
       setCareers((p.careers ?? []).map((c) => `${c.title}: ${c.body}`).join("\n"));
       setLinks((p.links ?? []).map((l) => `${l.label} | ${l.url}`).join("\n"));
     });
   }, []);
 
+  const setSec = (i: number, patch: Partial<SectionDraft>) => setSections((list) => list.map((x, j) => (j === i ? { ...x, ...patch } : x)));
+  const moveSec = (i: number, d: -1 | 1) => setSections((list) => {
+    const j = i + d;
+    if (j < 0 || j >= list.length) return list;
+    const next = list.slice();
+    [next[i], next[j]] = [next[j], next[i]];
+    return next;
+  });
+  const removeSec = (i: number) => {
+    if (!window.confirm(`'${sections[i].title || "이름 없는"}' 섹션을 지울까요? 저장해야 반영돼요.`)) return;
+    setSections((list) => list.filter((_, j) => j !== i));
+  };
+  const addSec = () => setSections((list) => [...list, { title: "", en: "", kind: "list", items: "", note: "" }]);
+
   const save = async () => {
     setBusy(true);
     const profile: Profile = {
       intro: intro.trim(),
+      nickname: nickname.trim(),
+      handle: handle.trim(),
+      subline: subline.trim(),
+      tagline: tagline.trim(),
+      sections: sections.map((x) => ({
+        title: x.title.trim(),
+        en: x.en.trim().toUpperCase(),
+        kind: x.kind,
+        items: x.items.split("\n").map((l) => l.trim()).filter(Boolean),
+        note: x.note.trim(),
+      })),
       careers: careers.split("\n").map((l) => l.trim()).filter(Boolean).map((l) => {
         const i = l.indexOf(":");
         return i < 0 ? { title: l, body: "" } : { title: l.slice(0, i).trim(), body: l.slice(i + 1).trim() };
@@ -405,16 +451,65 @@ function ProfileEditor({ onSaved, notify }: { onSaved: (m: string) => Promise<vo
           <h1 className="display" style={{ margin: 0, fontSize: "clamp(36px, 4vw, 56px)" }}>PROFILE</h1>
         </div>
       </div>
-      <form className="admin-form" style={{ maxWidth: 760 }} onSubmit={(e) => { e.preventDefault(); save(); }}>
+      <form className="admin-form" style={{ maxWidth: 860 }} onSubmit={(e) => { e.preventDefault(); save(); }}>
+        <div className="card-top dark"><span>INFO</span><span>프로필 페이지 맨 위</span></div>
         <div className="admin-fields">
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 200px" }}>
+              <FormRow id="p-nick" label="닉네임 (크게 표시)"><input id="p-nick" className="admin-input" value={nickname} onChange={(e) => setNickname(e.target.value)} /></FormRow>
+            </div>
+            <div style={{ flex: "1 1 200px" }}>
+              <FormRow id="p-handle" label="영문 표기"><input id="p-handle" className="admin-input" value={handle} onChange={(e) => setHandle(e.target.value)} /></FormRow>
+            </div>
+          </div>
+          <FormRow id="p-sub" label="닉네임 아래 작은 설명"><input id="p-sub" className="admin-input" value={subline} onChange={(e) => setSubline(e.target.value)} placeholder="AI CHAT USER // DREAMER" /></FormRow>
+          <FormRow id="p-tag" label="강조 띠 문구"><input id="p-tag" className="admin-input" value={tagline} onChange={(e) => setTagline(e.target.value)} /></FormRow>
           <FormRow id="p-intro" label="소개 문구" hint="홈 검은 띠와 프로필 페이지에 나와요">
             <textarea id="p-intro" className="admin-input" rows={3} value={intro} onChange={(e) => setIntro(e.target.value)} />
           </FormRow>
+        </div>
+
+        <div className="card-top dark"><span>SECTIONS</span><span>위에서부터 /02, /03 … 순서</span></div>
+        <div className="admin-fields">
+          <p className="muted" style={{ margin: 0, fontSize: 13, lineHeight: 1.7 }}>
+            내용은 한 줄에 하나씩 써요. <code>태그 | 본문 | 뱃지</code> 형식으로 쓰면 왼쪽 태그와 오른쪽 뱃지가 붙어요.
+            예: <code>BL | 로드리고 × 스틱스 | FULL OPEN</code>. 알약 형식에서 <code>가끔 짤뽑</code>처럼 쓰면 점선 알약이 돼요.
+          </p>
+          {sections.map((x, i) => (
+            <fieldset key={i} className="admin-sec">
+              <legend className="mono">/{String(i + 2).padStart(2, "0")} {x.title || "새 섹션"}</legend>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <div style={{ flex: "1 1 160px" }}><FormRow id={`s${i}-t`} label="제목"><input id={`s${i}-t`} className="admin-input" value={x.title} onChange={(e) => setSec(i, { title: e.target.value })} /></FormRow></div>
+                <div style={{ flex: "1 1 140px" }}><FormRow id={`s${i}-e`} label="영문"><input id={`s${i}-e`} className="admin-input" value={x.en} onChange={(e) => setSec(i, { en: e.target.value })} /></FormRow></div>
+                <div style={{ flex: "1 1 220px" }}>
+                  <FormRow id={`s${i}-k`} label="형식">
+                    <select id={`s${i}-k`} className="admin-input" value={x.kind} onChange={(e) => setSec(i, { kind: e.target.value as ProfileSection["kind"] })}>
+                      {SECTION_KINDS.map((k) => <option key={k.value} value={k.value}>{k.label}</option>)}
+                    </select>
+                  </FormRow>
+                </div>
+              </div>
+              <FormRow id={`s${i}-i`} label="내용 (한 줄에 하나)">
+                <textarea id={`s${i}-i`} className="admin-input admin-input-links" rows={Math.max(3, x.items.split("\n").length + 1)} value={x.items} onChange={(e) => setSec(i, { items: e.target.value })} />
+              </FormRow>
+              <FormRow id={`s${i}-n`} label="하단 메모 (선택)"><input id={`s${i}-n`} className="admin-input" value={x.note} onChange={(e) => setSec(i, { note: e.target.value })} /></FormRow>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <button type="button" className="btn-ghost btn-small" onClick={() => moveSec(i, -1)} disabled={i === 0}>↑ 위로</button>
+                <button type="button" className="btn-ghost btn-small" onClick={() => moveSec(i, 1)} disabled={i === sections.length - 1}>↓ 아래로</button>
+                <button type="button" className="btn-ghost btn-small" onClick={() => removeSec(i)} style={{ marginLeft: "auto" }}>섹션 삭제</button>
+              </div>
+            </fieldset>
+          ))}
+          <button type="button" className="btn-outline" onClick={addSec} style={{ justifyContent: "center" }}>+ 섹션 추가</button>
+        </div>
+
+        <div className="card-top dark"><span>ETC</span><span>경력 · 링크</span></div>
+        <div className="admin-fields">
           <FormRow id="p-careers" label="경력" hint="한 줄에 하나씩 `제목: 내용`">
-            <textarea id="p-careers" className="admin-input" rows={6} value={careers} onChange={(e) => setCareers(e.target.value)} placeholder="게임 내러티브: 시나리오 기획 · 집필" />
+            <textarea id="p-careers" className="admin-input" rows={4} value={careers} onChange={(e) => setCareers(e.target.value)} placeholder="게임 내러티브: 시나리오 기획 · 집필" />
           </FormRow>
-          <FormRow id="p-links" label="연락처 · SNS" hint="한 줄에 하나씩 `이름 | 주소`">
-            <textarea id="p-links" className="admin-input" rows={4} value={links} onChange={(e) => setLinks(e.target.value)} placeholder="X | https://x.com/..." />
+          <FormRow id="p-links" label="연락처 · SNS" hint="한 줄에 하나씩 `이름 | 주소`. 프로필 카드에 버튼으로 나와요">
+            <textarea id="p-links" className="admin-input admin-input-links" rows={3} value={links} onChange={(e) => setLinks(e.target.value)} placeholder="X | https://x.com/..." />
           </FormRow>
         </div>
         <div className="admin-actions">

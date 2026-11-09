@@ -212,6 +212,37 @@ export const tools: Tool[] = [];
 
 export const profile: Profile = {
   intro: "PAWCAT의 페르소나 · 프롬프트 · 작품 아카이브.",
+  nickname: "냥발",
+  handle: "PAWCAT",
+  subline: "AI CHAT USER // DREAMER",
+  tagline: "AI CHAT 같이 덕질해요  ///  트친소 & 자기소개",
+  sections: [
+    { title: "성향", en: "TYPE", kind: "pills", items: ["마음", "RT", "일상", "앓이", "가끔 짤뽑"] },
+    {
+      title: "드림 성향", en: "DREAM TYPE", kind: "statement",
+      items: ["캐릭터마다 달라요 | | 일부 오픈", "FULL | 스틱스가 포함된 드림은 완전 오픈", "BASE | 기본적으로 세계관 내의 도M 가이드 설정"],
+    },
+    {
+      title: "소개", en: "ABOUT", kind: "list",
+      items: ["A1 | 성인", "A2 | 1T 1D 어렵습니다만, 배려는 최대한 하려고 노력 중", "A3 | 일 때문에 교류는 마음 · 가끔 멘션 · 짤뽑 위주"],
+    },
+    {
+      title: "NG", en: "CAUTION", kind: "warn",
+      items: ["X | 뒷담 및 싸불", "X | 캐혐을 비롯한 혐오 발언, 이유 없는 폭력과 욕설은 안 좋아합니다", "! | 나름 오픈이지만, 소재 등이 겹치면 조금 스루합니다"],
+    },
+    { title: "좋아하는 것", en: "LIKE", kind: "grid", items: ["캐릭터 서사", "덕질 발언", "세계관 이야기", "페소 간 교류"] },
+    {
+      title: "드림", en: "DREAM", kind: "list",
+      items: [
+        "BL | 로드리고 × 스틱스 | FULL OPEN",
+        "BL | 체르노 × 스틱스 | FULL OPEN, 이탈",
+        "HL | 메테오 × 포피",
+        "HL | 모비딕 × 블러쉬 × 트러블",
+        "HL | 러스트 × 유스",
+      ],
+      note: "기본적으로 세계관 내 캐릭터들 다 좋아합니다 u//u",
+    },
+  ],
   careers: [],
   links: [],
 };

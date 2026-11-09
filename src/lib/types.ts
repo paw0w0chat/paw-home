@@ -110,9 +110,31 @@ export type Tool = Visibility & {
   body?: string;
 };
 
+/**
+ * 프로필 INFO 섹션.
+ * items는 한 줄에 하나. "태그 | 본문 | 뱃지1, 뱃지2" 형식 (태그·뱃지는 생략 가능)
+ * kind: pills(알약) · list(줄 목록) · grid(2열 상자) · statement(첫 줄 크게 + 목록) · warn(어두운 경고 상자)
+ */
+export type ProfileSection = {
+  title: string;
+  en: string;
+  kind: "pills" | "list" | "grid" | "statement" | "warn";
+  items: string[];
+  note?: string;
+};
+
 /** 프로필 (profile 문서 1개) */
 export type Profile = {
   intro: string;
+  /** 큰 닉네임 */
+  nickname?: string;
+  /** 닉네임 옆 영문 표기 */
+  handle?: string;
+  /** 닉네임 아래 작은 설명 */
+  subline?: string;
+  /** 강조 띠 문구 */
+  tagline?: string;
+  sections?: ProfileSection[];
   careers: { title: string; body: string }[];
   links: { label: string; url: string }[];
 };
