@@ -42,6 +42,20 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
 .btn.primary:hover{background:#D3B375}
 .btn.primary[disabled]{opacity:.6;cursor:progress}
 .btn.danger{color:#E9A79A;border-color:#5A3330}
+/* 툴바 팀 선택 */
+.team-btn{position:relative;display:inline-flex;align-items:center;gap:8px;border-color:var(--gold-2);color:var(--page-fg);font-weight:700}
+.team-btn i{width:7px;height:7px;border-radius:50%;background:var(--green);display:block}
+.team-btn select{appearance:none;border:0;background:transparent;color:var(--gold-2);font:700 12.5px var(--mono);letter-spacing:.06em;padding:0 2px;cursor:pointer}
+.team-btn select option{color:#111;background:#fff}
+.team-btn b{color:var(--gold-2);font-size:11px;margin-left:-4px;pointer-events:none}
+.team-btn:focus-within{outline:2px solid var(--gold-2);outline-offset:2px}
+.hint-inline{color:var(--gold-2);font-weight:700}
+/* 카드 위 팀 알약 안내 */
+.hd .team-hint{position:absolute;right:0;top:calc(100% + 10px);white-space:nowrap;background:var(--gold-2);color:#111;font:700 12px var(--kr);letter-spacing:0;padding:7px 12px;border-radius:8px;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:3}
+.hd .team-hint::before{content:"";position:absolute;right:28px;top:-6px;border:6px solid transparent;border-top:0;border-bottom-color:var(--gold-2)}
+.hd .tpill.is-new{animation:pill-pulse 1.8s ease-out infinite}
+@keyframes pill-pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.35)}70%{box-shadow:0 0 0 12px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){.hd .tpill.is-new{animation:none}}
 .confirm{display:inline-flex;gap:6px;align-items:center;font-size:12.5px;color:#E9A79A}
 
 /* ---------- stage ---------- */
@@ -197,9 +211,10 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
   <div class="bar">
     <div class="brand">
       <h1>THEMIS 트친소표<span>AGENT REGISTRATION FORM</span></h1>
-      <p>칸을 눌러 바로 입력하고, 이미지 칸을 눌러 사진을 올리세요. 올린 사진은 드래그해서 위치를 맞출 수 있어요.</p>
+      <p>칸을 눌러 바로 입력하고, 이미지 칸을 눌러 사진을 올리세요. 올린 사진은 드래그해서 위치를 맞출 수 있어요. <b class="hint-inline">팀 테마</b>를 고르면 색과 장식이 팀에 맞게 바뀌어요.</p>
     </div>
     <div class="tools">
+      <label class="btn team-btn" for="team2"><i aria-hidden="true"></i>팀 테마<select id="team2" aria-label="팀 테마 고르기"></select><b aria-hidden="true">▾</b></label>
       <div class="seg" role="group" aria-label="보기 크기">
         <button class="btn" id="zFit" aria-pressed="true">화면 맞춤</button>
         <button class="btn" id="z100" aria-pressed="false">100%</button>
@@ -222,7 +237,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
           <div class="t1">트친소표</div>
           <div class="t2">AGENT REGISTRATION FORM</div>
           <div class="t3">UNITED STATES DIVISION&nbsp;&nbsp;·&nbsp;&nbsp;2036</div>
-          <label class="tpill"><i></i><span id="teamName">TEAM CONSENTES</span><b class="caret" data-html2canvas-ignore aria-hidden="true">▾</b><select id="team" aria-label="팀 선택" data-html2canvas-ignore></select></label>
+          <label class="tpill"><i></i><span id="teamName">TEAM CONSENTES</span><b class="caret" data-html2canvas-ignore aria-hidden="true">▾</b><select id="team" aria-label="팀 선택" data-html2canvas-ignore></select><span class="team-hint" id="teamHint" data-html2canvas-ignore aria-hidden="true">눌러서 팀 테마 바꾸기</span></label>
         </div>
 
         <!-- PANEL 01 -->
@@ -299,7 +314,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
     </div>
   </div>
 
-  <p class="note">저장하면 <b>3200×1800 PNG</b>로 만들어져요. 입력한 내용은 이 브라우저에만 임시 저장되고, 다른 사람에게는 보이지 않아요. 휴대폰에서는 <b>100%</b>로 바꾸고 옆으로 밀면서 입력하면 편해요.</p>
+  <p class="note">저장하면 <b>3200×1800 PNG</b>로 만들어져요. 입력한 내용은 이 브라우저에만 임시 저장되고, 다른 사람에게는 보이지 않아요. 휴대폰에서는 <b>100%</b>로 바꾸고 옆으로 밀면서 입력하면 편해요. 팀은 위쪽 <b>팀 테마</b> 버튼이나 카드 오른쪽 위 팀 이름을 눌러 바꿀 수 있어요.</p>
 </div>
 
 <input type="file" id="file" accept="image/*" hidden>
@@ -468,14 +483,20 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
     $('#graf').innerHTML=rebel?graffiti(theme):'';
     // 'UNITED STATES DIVISION · 2036'은 미국 지부 팀(CONSENTES)에만
     document.querySelector('.hd .t3').hidden=theme.id!=='consentes';
-    $('#teamName').textContent=theme.label;$('#team').value=theme.id;
+    $('#teamName').textContent=theme.label;$('#team').value=theme.id;$('#team2').value=theme.id;
     try{localStorage.setItem(KEY+'-team',theme.id);}catch(_){}
     if(!quiet)toast(`${theme.label} 테마로 바꿨어요.`);
   }
   (function initTeam(){
-    const sel=$('#team');
-    THEMES.forEach(t=>{const o=document.createElement('option');o.value=t.id;o.textContent=t.label;sel.appendChild(o);});
-    sel.onchange=()=>applyTheme(sel.value);
+    const sel=$('#team'),sel2=$('#team2');
+    THEMES.forEach(t=>{for(const s of [sel,sel2]){const o=document.createElement('option');o.value=t.id;o.textContent=t.label;s.appendChild(o);}});
+    // 팀을 한 번이라도 바꿔본 사람에게는 안내를 다시 띄우지 않는다
+    const HINT=KEY+'-team-hint-seen';
+    const hideHint=()=>{$('#teamHint').hidden=true;document.querySelector('.hd .tpill').classList.remove('is-new');try{localStorage.setItem(HINT,'1');}catch(_){}};
+    let seen=false;try{seen=localStorage.getItem(HINT)==='1';}catch(_){}
+    if(seen)hideHint();else document.querySelector('.hd .tpill').classList.add('is-new');
+    sel.onchange=()=>{applyTheme(sel.value);hideHint();};
+    sel2.onchange=()=>{applyTheme(sel2.value);hideHint();};
     // 주소에 ?team=muse 처럼 붙이면 그 팀으로 시작
     let start=new URLSearchParams(location.search).get('team');
     if(!start){try{start=localStorage.getItem(KEY+'-team');}catch(_){}}
@@ -508,6 +529,7 @@ body{background:var(--page);color:var(--page-fg);font-family:var(--kr)}
     if(document.fonts&&document.fonts.ready)await document.fonts.ready;
     return html2canvas(card,{scale:2,backgroundColor:theme.bg,logging:false,scrollX:0,scrollY:0,width:1600,height:900,windowWidth:1600,windowHeight:900,
       onclone:(doc)=>{
+        doc.querySelectorAll(".is-new").forEach(n=>n.classList.remove("is-new"));
         doc.querySelectorAll('body > style, body > link').forEach(n=>doc.head.appendChild(n));
         const c=doc.getElementById('card');c.style.transform='none';c.style.position='relative';
         doc.documentElement.style.padding='0';doc.body.style.margin='0';doc.body.style.background=theme.bg;
