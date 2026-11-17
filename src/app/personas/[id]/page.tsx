@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DREAM_STATUS_LABEL, getDreamsByPersona, getGroup, getPersona, getPersonas, serial } from "@/lib/content";
 import { CopyButton } from "@/components/CopyButton";
+import { Gallery } from "@/components/Gallery";
+import { SongList } from "@/components/SongList";
 import { SectionHead } from "@/components/Blocks";
 import { Star } from "@/components/Ornaments";
 
@@ -42,6 +44,13 @@ export default async function PersonaDetailPage({ params }: Props) {
     getGroup(persona.workId),
     getDreamsByPersona(persona.id),
   ]);
+
+  // 주소가 http(s)인 항목만
+  const isHttp = (u?: string) => !!u && /^https?:\/\//i.test(u);
+  const gallery = (persona.gallery ?? []).filter((g) => isHttp(g.url));
+  const songs = (persona.songs ?? [])
+    .map((x) => ({ ...x, url: isHttp(x.url) ? x.url : "", link: isHttp(x.link) ? x.link : "", cover: isHttp(x.cover) ? x.cover : "" }))
+    .filter((x) => x.url || x.link);
 
   const notes = [
     { label: "ABILITY", text: persona.ability },
@@ -102,6 +111,20 @@ export default async function PersonaDetailPage({ params }: Props) {
           ) : null}
         </div>
       </section>
+
+      {gallery.length ? (
+        <section className="section" style={{ paddingTop: 56 }}>
+          <SectionHead title={["GALLERY", "이미지"]} sub={`${gallery.length} IMAGES`} />
+          <Gallery images={gallery} name={persona.nameKo} />
+        </section>
+      ) : null}
+
+      {songs.length ? (
+        <section className="section" style={{ paddingTop: 56 }}>
+          <SectionHead title={["THEME", "SONGS"]} sub={`${songs.length} TRACKS`} />
+          <SongList songs={songs} fallbackCover={persona.headImage || persona.bodyImage} />
+        </section>
+      ) : null}
 
       <section className="section" style={{ paddingTop: 56 }}>
         <SectionHead title={["PROMPT", "SHEET"]} sub="COPY READY" />

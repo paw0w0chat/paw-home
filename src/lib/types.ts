@@ -19,6 +19,11 @@ export type StatRow = {
   value: string;
 };
 
+export type GalleryImage = { url: string; caption?: string };
+
+/** 테마곡: 파일(url)이나 외부 링크(link, 예: Suno) 중 하나 이상 */
+export type Song = { title: string; url?: string; link?: string; note?: string; cover?: string };
+
 /** 페르소나 (personas 컬렉션) */
 export type Persona = Visibility & {
   id: string;
@@ -43,6 +48,10 @@ export type Persona = Visibility & {
   profileText?: string;
   /** 이미지 생성용 외형 프롬프트 */
   appearancePrompt?: string;
+  /** 상세 화면 갤러리 (슬라이드) */
+  gallery?: GalleryImage[];
+  /** 테마곡 */
+  songs?: Song[];
 };
 
 export type DreamStatus = "dating" | "chasing" | "ongoing" | "open";

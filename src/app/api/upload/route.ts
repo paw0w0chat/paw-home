@@ -10,7 +10,11 @@ const IMAGES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 // 툴 · 템플릿 첨부 파일은 PDF · ZIP도 허용
 const FILES = [...IMAGES, "application/pdf", "application/zip", "application/x-zip-compressed"];
 
+// 페르소나 테마곡
+const AUDIO = ["audio/mpeg", "audio/mp4", "audio/x-m4a", "audio/wav", "audio/x-wav", "audio/ogg"];
+
 function rulesFor(pathname: string) {
+  if (pathname.includes("/audio/")) return { types: AUDIO, maxBytes: 30 * 1024 * 1024 };
   return pathname.startsWith("tools/")
     ? { types: FILES, maxBytes: 30 * 1024 * 1024 }
     : { types: IMAGES, maxBytes: 10 * 1024 * 1024 };

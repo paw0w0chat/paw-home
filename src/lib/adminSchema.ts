@@ -13,7 +13,9 @@ export type FieldType =
   | "meta" // "LABEL: 값" 한 줄 → StatRow
   | "tags" // 쉼표로 구분 → string[]
   | "links" // "이름 | 주소" 한 줄에 하나 → { label, url }[]
-  | "file"; // 첨부 파일 (PNG · JPG · PDF · ZIP)
+  | "file" // 첨부 파일 (PNG · JPG · PDF · ZIP)
+  | "gallery" // 이미지 여러 장 + 설명
+  | "songs"; // 테마곡 목록
 
 export type OptionSource = "groups" | "groups:world" | "groups:work" | "personas";
 
@@ -72,6 +74,8 @@ export const SECTIONS: Section[] = [
       { key: "voice", label: "말투 · 대표 대사", type: "textarea" },
       { key: "headImage", label: "두상 이미지 (1:1)", type: "image", hint: "목록 카드의 대표 이미지로도 쓰여요 (없으면 전신 이미지)" },
       { key: "bodyImage", label: "전신 이미지 (2:3)", type: "image" },
+      { key: "gallery", label: "갤러리", type: "gallery", hint: "상세 페이지에 슬라이드로 보여요. 여러 장을 한 번에 올릴 수 있어요" },
+      { key: "songs", label: "테마곡", type: "songs", hint: "곡마다 따로 재생돼요. 음원 파일을 올리거나 Suno 링크를 넣어요" },
       { key: "profileText", label: "프로필 전문", type: "textarea", hint: "채팅 플랫폼에 붙여 넣을 프로필" },
       { key: "appearancePrompt", label: "외형 프롬프트", type: "textarea", hint: "이미지 생성용" },
     ],
@@ -166,6 +170,9 @@ export function toForm(field: Field, value: unknown): string {
       return Array.isArray(value) ? value.join(", ") : String(value);
     case "links":
       return (value as { label: string; url: string }[]).map((l) => `${l.label} | ${l.url}`).join("\n");
+    case "gallery":
+    case "songs":
+      return JSON.stringify(Array.isArray(value) ? value : []);
     default:
       return String(value);
   }
@@ -181,6 +188,25 @@ export function fromForm(field: Field, text: string): unknown {
       return text.split(",").map((t) => t.trim().replace(/^#/, "")).filter(Boolean);
     case "links":
       return parseLinks(text);
+    case "gallery":
+    case "songs": {
+      try {
+        const arr = JSON.parse(text || "[]");
+        if (!Array.isArray(arr)) return [];
+        // 주소가 없는 빈 항목은 저장하지 않는다
+        return field.type === "gallery"
+          ? arr.filter((x) => x && x.url).map((x) => ({ url: String(x.url).trim(), caption: String(x.caption ?? "").trim() }))
+          : arr.filter((x) => x && (x.url || x.link)).map((x) => ({
+              title: String(x.title ?? "").trim() || "제목 없음",
+              url: String(x.url ?? "").trim(),
+              link: String(x.link ?? "").trim(),
+              note: String(x.note ?? "").trim(),
+              cover: String(x.cover ?? "").trim(),
+            }));
+      } catch {
+        return [];
+      }
+    }
     case "number":
       return Number(text) || 0;
     default:

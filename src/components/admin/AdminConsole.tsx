@@ -8,6 +8,7 @@ import { fromForm, SECTIONS, toForm, toSlug, type Field, type Section } from "@/
 import * as seed from "@/data/seed";
 import type { Profile, ProfileSection } from "@/lib/types";
 import { ImageField } from "./ImageField";
+import { GalleryField, SongsField } from "./ListFields";
 
 type Row = { id: string; isPublic: boolean; order: number; [key: string]: unknown };
 type Store = Record<CollectionName, Row[]>;
@@ -318,6 +319,10 @@ function CollectionEditor({ section, store, reload, publish, notify, token }: {
                     {!f.required || !Array.isArray(f.options) ? <option value="">— 선택 —</option> : null}
                     {optionsFor(f).map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </select>
+                ) : f.type === "gallery" ? (
+                  <GalleryField id={`f-${f.key}`} value={draft.values[f.key] ?? ""} onChange={(v) => set(f.key, v)} folder={section.id} token={token} />
+                ) : f.type === "songs" ? (
+                  <SongsField id={`f-${f.key}`} value={draft.values[f.key] ?? ""} onChange={(v) => set(f.key, v)} folder={section.id} token={token} />
                 ) : f.type === "image" || f.type === "file" ? (
                   <ImageField id={`f-${f.key}`} kind={f.type} value={draft.values[f.key] ?? ""} onChange={(v) => set(f.key, v)} folder={section.id} token={token} />
                 ) : f.type === "textarea" || f.type === "stats" || f.type === "links" ? (
