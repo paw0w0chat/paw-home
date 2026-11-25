@@ -14,9 +14,10 @@ html,body{margin:0}
 /* 도트 폰트는 12px 배수(저장 시 6px 배수)일 때 픽셀이 딱 맞는다: 12 · 18 · 24 · 30 · 36 · 48 · 72 */
 :root{
   color-scheme:light;
-  --cream:#F3F1E8; --grid:#E1DDD1; --grid2:#CFCABA; --win:#FFFEFA;
-  --ink:#17181C; --blue:#2F54EB; --blue-d:#1F3CC0; --orange:#FF5B23;
-  --mute:#7D7A70; --hint:#B2AEA2; --face:#D9D6CC; --slot:#E7E4DA; --rule:#CBC6B7;
+  /* 흑백 + 포인트 레트로 블루 하나 */
+  --cream:#F0F0ED; --win:#FFFFFF;
+  --ink:#111111; --blue:#2B4FE6; --blue-d:#1B36B5;
+  --mute:#666666; --hint:#A6A6A6; --face:#E2E2E2; --slot:#F4F4F4; --rule:#BDBDBD;
   --px:"Galmuri11","NeoDunggeunmo","DungGeunMo",ui-monospace,monospace;
 }
 body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:keep-all}
@@ -33,15 +34,16 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
 .btn{appearance:none;border:2px solid var(--ink);background:var(--win);color:var(--ink);font:400 12px var(--px);padding:9px 12px;cursor:pointer;line-height:1;box-shadow:3px 3px 0 var(--ink);border-radius:0}
 .seg .btn+.btn{border-left:0}
 .btn[aria-pressed="true"]{background:var(--ink);color:#fff}
-.btn:hover{background:#FFF6D9}
+.btn:hover{background:#EEF1FD}
 .btn[aria-pressed="true"]:hover{background:var(--ink)}
 .btn:active{transform:translate(3px,3px);box-shadow:none}
-.btn:focus-visible,.chk:focus-visible,.tag:focus-visible,.slot:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.btn:focus-visible,.chk:focus-visible,.tag:focus-visible,.slot:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .btn.primary{background:var(--blue);color:#fff;font-weight:700;padding:10px 16px}
 .btn.primary:hover{background:var(--blue-d)}
 .btn.primary[disabled]{opacity:.6;cursor:progress}
-.btn.danger{color:#C2341A}
-.confirm{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:#C2341A}
+.btn.danger{background:var(--ink);color:#fff}
+.btn.danger:hover{background:#333}
+.confirm{display:inline-flex;gap:8px;align-items:center;font-size:12px;color:var(--ink)}
 
 /* ---------- stage ---------- */
 .stage{position:relative;width:100%;border:2px solid var(--ink);background:var(--cream)}
@@ -64,23 +66,30 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
 .hd .brandrow{position:absolute;left:0;top:6px;display:flex;align-items:flex-end;gap:26px}
 .hd .logo{font:700 72px/72px var(--px);letter-spacing:0;color:var(--ink);text-shadow:6px 6px 0 var(--blue);white-space:nowrap}
 .hd .sub{display:flex;flex-direction:column;gap:8px;padding-bottom:2px}
-.hd .sticker{align-self:flex-start;font:700 24px/1 var(--px);color:#fff;background:var(--ink);padding:6px 10px;box-shadow:4px 4px 0 var(--orange)}
+.hd .sticker{align-self:flex-start;font:700 24px/1 var(--px);color:#fff;background:var(--ink);padding:6px 10px;box-shadow:4px 4px 0 var(--blue)}
 .hd .sub span{font:400 18px/1.2 var(--px);color:var(--blue);white-space:nowrap}
-.pop{position:absolute;right:0;top:0;width:396px;height:94px;background:var(--win);border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);display:flex;flex-direction:column}
-.pop .tb{height:30px;background:var(--blue);display:flex;align-items:center;gap:8px;padding:0 4px 0 10px;color:#fff;font:700 12px/1 var(--px);border-bottom:3px solid var(--ink)}
+.pop{position:absolute;right:0;top:0;width:380px;height:94px;background:var(--win);border:3px solid var(--ink);display:flex;flex-direction:column}
+.pop .tb{height:30px;background:var(--ink);display:flex;align-items:center;gap:8px;padding:0 4px 0 10px;color:#fff;font:700 12px/1 var(--px);border-bottom:3px solid var(--ink)}
+.htag{position:absolute;left:846px;top:8px;width:236px;display:flex;flex-direction:column;gap:8px}
+.htag .r{display:flex;gap:10px;align-items:stretch}
+.htag .sqk{width:48px;height:48px;flex:none;background:var(--ink);display:flex;align-items:center;justify-content:center}
+.htag .tx{display:flex;flex-direction:column;justify-content:space-between;font:400 12px/1 var(--px);white-space:nowrap}
+.htag .tx b{font-weight:700}
 .pop .pbd{flex:1;display:flex;align-items:center;gap:14px;padding:0 12px}
 .pop .msg{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
 .pop .msg b{font:700 18px/1 var(--px)}
 .pop .msg small{font:400 12px/1 var(--px);color:var(--mute);white-space:nowrap}
-.pop .ok{font:400 12px/1 var(--px);border:2px solid var(--ink);background:var(--face);padding:7px 12px;box-shadow:2px 2px 0 var(--ink)}
+.pop .ok{font:700 12px/1 var(--px);border:2px solid var(--ink);background:var(--blue);color:#fff;padding:8px 14px;box-shadow:3px 3px 0 var(--ink)}
 
 /* window chrome */
-.win{position:absolute;top:134px;height:694px;background:var(--win);border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink);display:flex;flex-direction:column}
+.win{position:absolute;top:134px;height:694px;background:var(--win);border:3px solid var(--ink);display:flex;flex-direction:column}
 .w1{left:44px;width:456px}.w2{left:528px;width:520px}.w3{left:1076px;width:480px}
 .tb{height:36px;flex:none;background:var(--ink);display:flex;align-items:center;gap:10px;padding:0 6px 0 10px;color:#fff;font:700 18px/1 var(--px);border-bottom:3px solid var(--ink)}
 .w2>.tb{background:var(--blue)}
 .tb .btns{margin-left:auto;display:flex;gap:4px}
-.tb .btns span{width:24px;height:22px;background:var(--face);border:2px solid;border-color:#fff #6F6C63 #6F6C63 #fff;display:flex;align-items:center;justify-content:center}
+.tb .btns span{width:24px;height:22px;background:#fff;display:flex;align-items:center;justify-content:center}
+.mb{height:26px;flex:none;display:flex;align-items:center;gap:20px;padding:0 12px;border-bottom:2px solid var(--ink);font:400 12px/1 var(--px)}
+.mb u{text-decoration:underline;text-underline-offset:2px}
 .pop .tb .btns span{width:20px;height:18px}
 .bd{flex:1;min-height:0;padding:18px 22px 20px;display:flex;flex-direction:column;justify-content:space-between}
 .meta{display:flex;justify-content:space-between;align-items:center;font:400 12px/1 var(--px);color:var(--mute);white-space:nowrap}
@@ -111,13 +120,15 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
 
 /* image slots */
 .slot{position:relative;background-color:var(--slot);background-repeat:no-repeat;background-size:cover;background-position:50% 50%;cursor:pointer;overflow:hidden;outline:none;touch-action:none;border:3px solid var(--ink)}
-.slot .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;pointer-events:none}
-.slot .ph span{font:400 12px var(--px);color:var(--mute);letter-spacing:.1em}
+.slot .ph{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;pointer-events:none}
+.slot .ph span{font:400 12px var(--px);color:var(--ink);letter-spacing:.1em;background:#fff;padding:2px 4px}
+.slot .ph .dz{position:absolute;left:0;top:0;z-index:-1;padding:0;background:none}
+.slot .ph [data-pix]{padding:0;background:none}
 .slot .ph em{font:400 12px/1 var(--px);font-style:normal;color:var(--ink);background:#fff;border:2px solid var(--ink);padding:5px 8px}
 .slot.has .ph{display:none}
 .slot.has{cursor:grab}
 .slot.drag{cursor:grabbing}
-.slot.over{box-shadow:inset 0 0 0 4px var(--orange)}
+.slot.over{box-shadow:inset 0 0 0 4px var(--blue)}
 .slot .rm{position:absolute;top:6px;right:6px;width:26px;height:26px;border:2px solid var(--ink);background:#fff;color:var(--ink);font:700 18px/20px var(--px);cursor:pointer;display:none;padding:0;border-radius:0}
 .slot.has .rm{display:block}
 .slot .cap{position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--ink);font:400 12px/1 var(--px);color:#fff}
@@ -137,7 +148,7 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
 .dsel .val.empty{color:var(--hint)}
 .dsel .dn{width:34px;align-self:stretch;flex:none;background:var(--face);border-left:2px solid var(--ink);display:flex;align-items:center;justify-content:center}
 .dsel select{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
-.dsel:focus-within{outline:3px solid var(--orange);outline-offset:2px}
+.dsel:focus-within{outline:3px solid var(--blue);outline-offset:2px}
 .bar-id{display:flex;align-items:center;gap:14px;padding-top:12px;border-top:2px dotted rgba(23,24,28,.4)}
 .bar-id .t{display:flex;flex-direction:column;gap:6px;font:400 12px/1 var(--px);color:var(--mute);white-space:nowrap}
 .bar-id .t b{color:var(--ink);font-weight:700}
@@ -172,18 +183,27 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
 .bh{display:flex;align-items:center;gap:10px;height:34px}
 .bh .num{font:700 24px/1 var(--px);color:var(--blue)}
 .bh .en{font:700 24px/1 var(--px)}
-.bh .ng{display:flex;align-items:center;gap:8px;background:var(--orange);color:#fff;font:700 18px/1 var(--px);padding:5px 10px 5px 8px;border:2px solid var(--ink)}
+.bh .ng{display:flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font:700 18px/1 var(--px);padding:5px 10px 5px 8px;border:2px solid var(--ink)}
 .bh .kr{font:400 12px/1 var(--px);color:var(--mute)}
 .bh .ln{flex:1;height:0;border-top:2px dotted var(--ink);opacity:.5}
 .blk .fld{height:34px}
 
+/* NOTE 창 스크롤바 (장식) */
+.w3 .bd{position:relative;padding-right:52px}
+.sbar{position:absolute;right:0;top:0;bottom:0;width:26px;border-left:2px solid var(--ink);display:flex;flex-direction:column;background:#fff}
+.sbar .ar{height:24px;flex:none;display:flex;align-items:center;justify-content:center}
+.sbar .ar:first-child{border-bottom:2px solid var(--ink)}.sbar .ar:last-child{border-top:2px solid var(--ink)}
+.sbar .tr{flex:1;position:relative;overflow:hidden}
+.sbar .tr svg{position:absolute;left:0;top:0}
+.sbar .th{position:absolute;left:0;right:0;top:24px;height:92px;background:#fff;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
 /* taskbar */
 .task{position:absolute;left:0;top:856px;width:1600px;height:44px;background:var(--ink);display:flex;align-items:center;gap:16px;padding:0 44px}
-.task .start{display:flex;align-items:center;gap:8px;height:30px;padding:0 12px;background:var(--blue);color:#fff;font:700 18px/1 var(--px);border:2px solid;border-color:#7F97FF #0E1F73 #0E1F73 #7F97FF}
-.task .clock{margin-left:auto;height:30px;display:flex;align-items:center;gap:8px;padding:0 12px;font:400 18px/1 var(--px);color:#fff;border:2px solid;border-color:#000 #55565C #55565C #000}
+.task .start{display:flex;align-items:center;gap:8px;height:30px;padding:0 12px;background:var(--blue);color:#fff;font:700 18px/1 var(--px);border:2px solid #fff}
+.task .clock{margin-left:auto;height:30px;display:flex;align-items:center;gap:10px;padding:0 12px;font:400 18px/1 var(--px);color:#fff;border:2px solid #fff}
+.task .tmid{display:flex;align-items:center;gap:10px;font:400 12px/1 var(--px);color:#fff;letter-spacing:.12em}
 
 /* export overlay */
-.ov{position:fixed;inset:0;z-index:40;background:rgba(23,24,28,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:calc(20px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.ov{position:fixed;inset:0;z-index:40;background:rgba(17,17,17,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:calc(20px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .ov img{max-width:100%;max-height:72vh;border:2px solid #fff}
 .ov p{margin:0;font:400 12px/1.8 var(--px);color:#fff;text-align:center}
 </style>
@@ -210,18 +230,19 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
     <div class="scaler" id="scaler">
       <div class="card" id="card">
         <svg class="bgsvg" id="bgsvg" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
-        <span class="deco" data-pix="spark" data-s="4" data-c="b" style="left:500px;top:30px"></span>
-        <span class="deco" data-pix="spark" data-s="3" data-c="o" style="left:1046px;top:96px"></span>
-        <span class="deco" data-pix="spark" data-s="3" data-c="b" style="left:14px;top:430px"></span>
-        <span class="deco" data-pix="spark" data-s="3" data-c="o" style="left:1568px;top:560px"></span>
 
         <div class="hd">
           <div class="brandrow">
             <div class="logo">THE ORIGIN</div>
             <div class="sub"><b class="sticker">트친소표</b><span>아틀라스 한국 지부 · 감응자 교류 등록서</span></div>
           </div>
+          <div class="htag">
+            <div class="r"><span class="sqk"><svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" style="shape-rendering:geometricPrecision"><circle cx="17" cy="17" r="15" stroke="#FFFFFF" stroke-width="2"/><ellipse cx="17" cy="17" rx="15" ry="6" stroke="#FFFFFF" stroke-width="2"/><ellipse cx="17" cy="17" rx="6" ry="15" stroke="#FFFFFF" stroke-width="2"/><path d="M17 2V32" stroke="#FFFFFF" stroke-width="2"/></svg></span>
+              <div class="tx"><b>ATLAS KOREA BRANCH</b><span>SENSITIVE REGISTRY</span><span>No. 2053-0303</span></div></div>
+            <svg id="hazard" width="236" height="12" viewBox="0 0 236 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+          </div>
           <div class="pop">
-            <div class="tb"><span data-pix="warn" data-s="1"></span>알림.msg<span class="btns"><span data-pix="close" data-s="2"></span></span></div>
+            <div class="tb"><span data-pix="warn" data-s="1" data-inv="1"></span>SYSTEM<span class="btns"><span data-pix="close" data-s="2"></span></span></div>
             <div class="pbd">
               <span data-pix="warn" data-s="3"></span>
               <div class="msg"><b>새 교류 신청 1건</b><small>ATLAS KOREA BRANCH · 2053</small></div>
@@ -229,15 +250,16 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
             </div>
           </div>
         </div>
-        <span class="deco" data-pix="cursor" data-s="3" style="left:1530px;top:84px"></span>
+        <span class="deco" data-pix="cursor" data-s="3" style="left:1526px;top:84px"></span>
 
         <!-- WINDOW 01 -->
         <section class="win w1" aria-label="프로필">
           <div class="tb"><span data-pix="idcard" data-s="2"></span>PROFILE.id<span class="btns"><span data-pix="min" data-s="2"></span><span data-pix="max" data-s="2"></span><span data-pix="close" data-s="2"></span></span></div>
+          <div class="mb"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
           <div class="bd">
             <div class="meta"><span>C:\ATLAS\KR\PROFILE</span><span class="no">No.<input class="fld" id="f-no" maxlength="10" autocomplete="off" aria-label="번호"></span></div>
             <div class="slot s1" id="img-profile" tabindex="0" role="button" aria-label="프로필 이미지 올리기">
-              <div class="ph"><span data-pix="user" data-s="5"></span><span>PROFILE IMAGE</span><em data-html2canvas-ignore>눌러서 이미지 올리기</em></div>
+              <div class="ph"><span class="dz" data-dz></span><span data-pix="user" data-s="5"></span><span>PROFILE IMAGE</span><em data-html2canvas-ignore>눌러서 이미지 올리기</em></div>
               <button class="rm" data-html2canvas-ignore aria-label="이미지 지우기">×</button>
               <div class="cap"><span data-pix="spark" data-s="1" data-c="w"></span>PROFILE.png</div>
             </div>
@@ -263,18 +285,19 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
         <!-- WINDOW 02 -->
         <section class="win w2" aria-label="드림">
           <div class="tb"><span data-pix="heart" data-s="2" data-c="w"></span>DREAM.log<span class="btns"><span data-pix="min" data-s="2"></span><span data-pix="max" data-s="2"></span><span data-pix="close" data-s="2"></span></span></div>
+          <div class="mb"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
           <div class="bd">
             <div class="meta"><span>C:\ATLAS\KR\DREAM</span><span>메인 드림 · 커플 표기</span></div>
             <div class="d-ttl"><span class="big">DREAM</span><small>드림</small></div>
             <div class="couple">
               <div class="cimgs">
                 <div class="slot s2" id="img-a" tabindex="0" role="button" aria-label="메인 드림 이미지 A 올리기">
-                  <div class="ph"><span data-pix="pic" data-s="4"></span><span>IMAGE A</span><em data-html2canvas-ignore>눌러서 올리기</em></div>
+                  <div class="ph"><span class="dz" data-dz></span><span data-pix="pic" data-s="4"></span><span>IMAGE A</span><em data-html2canvas-ignore>눌러서 올리기</em></div>
                   <button class="rm" data-html2canvas-ignore aria-label="이미지 지우기">×</button>
                 </div>
                 <div class="mid"><div class="xc"><span data-pix="close" data-s="4" data-c="b"></span></div><small>MAIN</small></div>
                 <div class="slot s2" id="img-b" tabindex="0" role="button" aria-label="메인 드림 이미지 B 올리기">
-                  <div class="ph"><span data-pix="pic" data-s="4"></span><span>IMAGE B</span><em data-html2canvas-ignore>눌러서 올리기</em></div>
+                  <div class="ph"><span class="dz" data-dz></span><span data-pix="pic" data-s="4"></span><span>IMAGE B</span><em data-html2canvas-ignore>눌러서 올리기</em></div>
                   <button class="rm" data-html2canvas-ignore aria-label="이미지 지우기">×</button>
                 </div>
               </div>
@@ -298,6 +321,7 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
         <!-- WINDOW 03 -->
         <section class="win w3" aria-label="교류와 취향">
           <div class="tb"><span data-pix="doc" data-s="2"></span>NOTE.txt<span class="btns"><span data-pix="min" data-s="2"></span><span data-pix="max" data-s="2"></span><span data-pix="close" data-s="2"></span></span></div>
+          <div class="mb"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
           <div class="bd">
             <div class="meta"><span>C:\ATLAS\KR\NOTE</span><span>교류 · 취향</span></div>
             <div class="ty">
@@ -307,12 +331,14 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
             <div class="blk" id="blk-like"></div>
             <div class="blk" id="blk-ng"></div>
             <div class="blk" id="blk-about"></div>
+            <div class="sbar" aria-hidden="true"><span class="ar" data-pix="up" data-s="2"></span><span class="tr" id="sbTrack"><span class="th"></span></span><span class="ar" data-pix="down" data-s="2"></span></div>
           </div>
         </section>
 
         <div class="task">
           <span class="start"><span data-pix="spark" data-s="2" data-c="w"></span>시작</span>
-          <span class="clock"><span data-pix="warn" data-s="1"></span>2053.03.03 08:40</span>
+          <span class="tmid">THE ORIGIN&nbsp;&nbsp;/&nbsp;&nbsp;1-BIT&nbsp;&nbsp;/&nbsp;&nbsp;트친소표</span>
+          <span class="clock"><span data-pix="glass" data-s="2" data-inv="1"></span>2053.03.03 08:40</span>
         </div>
       </div>
     </div>
@@ -338,11 +364,13 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
   /* ---------- 도트 아이콘 ----------
      글자 하나 = 한 칸. k 먹색, w 흰색, b 파랑, o 주황, g 회색, . 빈칸.
      html2canvas가 SVG 안의 CSS 변수를 못 읽어서 색은 값으로 넣는다. */
-  const COL={k:'#17181C',w:'#FFFFFF',b:'#2F54EB',o:'#FF5B23',g:'#B9B5A9'};
+  const COL={k:'#111111',w:'#FFFFFF',b:'#2B4FE6',g:'#9A9A9A'};
   const PIX={
     spark:['...b...','...b...','..bbb..','bbbbbbb','..bbb..','...b...','...b...'],
     heart:['.bb.bb.','bbbbbbb','bbbbbbb','.bbbbb.','..bbb..','...b...'],
-    warn:['.....o.....','....ooo....','....oko....','...ookoo...','...ookoo...','..oookooo..','..ooooooo..','.ooookoooo.','ooooooooooo','kkkkkkkkkkk'],
+    warn:['.....k.....','....kkk....','....kwk....','...kkwkk...','...kkwkk...','..kkkwkkk..','..kkkkkkk..','.kkkkwkkkk.','kkkkkkkkkkk'],
+    glass:['kkkkkkkkk','.kwwwwwk.','.kwbbbwk.','..kwbwk..','...kbk...','..kwwwk..','.kwwbwwk.','.kwbbbwk.','kkkkkkkkk'],
+    up:['...k...','..kkk..','.kkkkk.','kkkkkkk'],
     close:['k.....k','kk...kk','.kk.kk.','..kkk..','.kk.kk.','kk...kk','k.....k'],
     min:['.......','.......','.......','.......','.......','kkkkkk.','kkkkkk.'],
     max:['kkkkkkk','kkkkkkk','k.....k','k.....k','k.....k','k.....k','kkkkkkk'],
@@ -354,26 +382,44 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
     doc:['wwwwww...','w....ww..','w....w.w.','w....wwww','w.bbbbb.w','w.......w','w.bbbbb.w','w.......w','w.bbb...w','wwwwwwwww'],
     cursor:['k.......','kk......','kwk.....','kwwk....','kwwwk...','kwwwwk..','kwwwwwk.','kwwwwwwk','kwwwkkkk','kwkkwk..','kk..kwk.','k...kwk.','.....kk.'],
   };
-  function pixSvg(name,s,recolor){
+  function pixSvg(name,s,recolor,inv){
     const m=PIX[name];if(!m)return'';const h=m.length,w=m[0].length;let r='';
-    for(let y=0;y<h;y++)for(let x=0;x<w;x++){let c=m[y][x];if(c==='.')continue;if(recolor&&c!=='w')c=recolor;r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${COL[c]}"/>`;}
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){let c=m[y][x];if(c==='.')continue;if(recolor&&c!=='w')c=recolor;if(inv)c=c==='k'?'w':c==='w'?'k':c;r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${COL[c]}"/>`;}
     return `<svg width="${w*s}" height="${h*s}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;
   }
   // data-c를 주면 흰색 외의 칸을 그 색으로 바꿔 그린다
-  document.querySelectorAll('[data-pix]').forEach(el=>{el.innerHTML=pixSvg(el.dataset.pix,+el.dataset.s||1,el.dataset.c||null);});
+  document.querySelectorAll('[data-pix]').forEach(el=>{el.innerHTML=pixSvg(el.dataset.pix,+el.dataset.s||1,el.dataset.c||null,!!el.dataset.inv);});
+
+  /* 1비트 디더링 — light: 4칸마다 점, half: 체크무늬 */
+  function dither(w,h,kind,id){
+    const pat=kind==='half'?`<pattern id="${id}" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="1" height="1" fill="#111111"/><rect x="1" y="1" width="1" height="1" fill="#111111"/></pattern>`
+      :`<pattern id="${id}" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="1" height="1" fill="#111111"/><rect x="2" y="2" width="1" height="1" fill="#111111"/></pattern>`;
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true"><defs>${pat}</defs><rect width="${w}" height="${h}" fill="#FFFFFF"/><rect width="${w}" height="${h}" fill="url(#${id})"/></svg>`;
+  }
+  document.querySelectorAll('[data-dz]').forEach((el,i)=>{const sl=el.closest('.slot');el.innerHTML=dither(sl.clientWidth,sl.clientHeight,'light','dz'+i);});
+  (function(){const tr=$('#sbTrack');tr.insertAdjacentHTML('afterbegin',dither(24,tr.clientHeight||600,'half','dsb'));})();
+  (function(){let r='';for(let x=-12;x<236;x+=14)r+=`<path d="M${x} 12L${x+12} 0H${x+19}L${x+7} 12Z" fill="#111111"/>`;$('#hazard').innerHTML=r;})();
 
   /* ---------- 배경: 모눈종이 ---------- */
+  /* ---------- 배경: 점 모눈 + 창 그림자(디더링) + 겹친 창 + 별 ---------- */
   (function bg(){
-    let minor='',major='';
-    for(let x=20;x<1600;x+=20)(x%100?(minor+=`M${x} 0V900`):(major+=`M${x} 0V900`));
-    for(let y=20;y<900;y+=20)(y%100?(minor+=`M0 ${y}H1600`):(major+=`M0 ${y}H1600`));
-    $('#bgsvg').innerHTML=`<rect width="1600" height="900" fill="#F3F1E8"/><path d="${minor}" stroke="#E1DDD1" stroke-width="1" fill="none"/><path d="${major}" stroke="#CFCABA" stroke-width="1" fill="none"/>`+
-      `<path d="M12 36V12H36M1564 12H1588V36M12 820V844H36M1588 820V844H1564" stroke="#17181C" stroke-width="3" fill="none"/>`;
+    const K='#111111',B='#2B4FE6';
+    let dots='';for(let x=20;x<1600;x+=20)for(let y=20;y<850;y+=20)dots+=`M${x} ${y}h2v2h-2Z`;
+    const shadow=(x,y,w,h,o)=>`<rect x="${x+o}" y="${y+o}" width="${w}" height="${h}" fill="url(#dsh)"/>`;
+    const star=(x,y,r,c)=>`<path d="M${x} ${y-r}Q${x} ${y} ${x+r} ${y}Q${x} ${y} ${x} ${y+r}Q${x} ${y} ${x-r} ${y}Q${x} ${y} ${x} ${y-r}Z" fill="${c}"/>`;
+    const cross=(x,y,r)=>`<g stroke="${K}" stroke-width="2" fill="none"><circle cx="${x}" cy="${y}" r="${r}"/><path d="M${x} ${y-r-7}V${y-r+5}M${x} ${y+r-5}V${y+r+7}M${x-r-7} ${y}H${x-r+5}M${x+r-5} ${y}H${x+r+7}"/></g>`;
+    $('#bgsvg').innerHTML=
+      `<defs><pattern id="dsh" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="1" height="1" fill="${K}"/><rect x="1" y="1" width="1" height="1" fill="${K}"/></pattern></defs>`+
+      `<rect width="1600" height="900" fill="#F0F0ED"/><path d="${dots}" fill="#C9C9C4"/>`+
+      `<rect x="1144" y="8" width="380" height="94" fill="#FFFFFF" stroke="${K}" stroke-width="3"/><rect x="1160" y="15" width="380" height="94" fill="#FFFFFF" stroke="${K}" stroke-width="3"/>`+
+      shadow(1176,22,380,94,7)+shadow(44,134,456,694,9)+shadow(528,134,520,694,9)+shadow(1076,134,480,694,9)+
+      star(866,44,16,B)+star(540,108,9,K)+star(1068,122,11,K)+star(22,470,10,K)+star(1578,600,12,B)+cross(22,250,7)+
+      `<path d="M12 36V12H36M1564 12H1588V36M12 820V844H36M1588 820V844H1564" stroke="${K}" stroke-width="3" fill="none"/>`;
   })();
 
   /* ---------- 바코드 (장식) ---------- */
   (function barcode(){let x=0,s=20530303,r='';const rnd=()=>{s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;};
-    while(x<190){const w=1+Math.floor(rnd()*3);r+=`<rect x="${x}" y="0" width="${w*2}" height="32" fill="#17181C"/>`;x+=w*2+2+Math.floor(rnd()*3)*2;}
+    while(x<190){const w=1+Math.floor(rnd()*3);r+=`<rect x="${x}" y="0" width="${w*2}" height="32" fill="#111111"/>`;x+=w*2+2+Math.floor(rnd()*3)*2;}
     $('#barcode').innerHTML=r;})();
 
   /* ---------- 반복되는 칸 만들기 ---------- */
@@ -387,8 +433,8 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
   for(let i=1;i<=3;i++){const r=document.createElement('div');r.className='orow';r.innerHTML=`<span class="n">0${i}</span><span class="tg"></span><span class="pair"><input class="fld" id="f-o${i}a" maxlength="10" autocomplete="off" aria-label="그 외 드림 ${i} 첫 번째"><span class="x">${X}</span><input class="fld" id="f-o${i}b" maxlength="10" autocomplete="off" aria-label="그 외 드림 ${i} 두 번째"></span>`;const tg=r.querySelector('.tg');['BL','HL','GL'].forEach((l,j)=>tg.append(chk(l,`o${i}-${j}`,true)));others.append(r);}
   [['like','01','LIKE','좋아하는 것','좋아하는 캐릭터, 소재, 교류 방식 등'],['ng','02','NG','피해 주세요','지뢰, 불편한 소재 등'],['about','03','ABOUT','자유 소개','하고 싶은 말']].forEach(([id,n,en,kr,ph])=>{
     const b=$('#blk-'+id);
-    const label=id==='ng'?`<span class="ng">${pixSvg('warn',2).replace(/#FF5B23/g,'#FFFFFF')}NG</span>`:`<span class="en">${en}</span>`;
-    b.innerHTML=`<div class="bh"><span class="num">${n}</span>${label}<span class="kr">${kr}</span><span class="ln"></span>${id==='like'?pixSvg('heart',2,'o'):''}</div>`+
+    const label=id==='ng'?`<span class="ng">${pixSvg('warn',2,null,true)}NG</span>`:`<span class="en">${en}</span>`;
+    b.innerHTML=`<div class="bh"><span class="num">${n}</span>${label}<span class="kr">${kr}</span><span class="ln"></span>${id==='like'?pixSvg('heart',2):''}</div>`+
       [1,2,3].map(k=>`<input class="fld" id="f-${id}${k}" maxlength="24" ${k===1?`placeholder="${ph}"`:''} autocomplete="off" aria-label="${kr} ${k}번째 줄">`).join('');
   });
 
@@ -467,11 +513,11 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
   $('#ovClose').onclick=()=>{$('#ov').hidden=true;};
   async function render(){
     try{await Promise.all([document.fonts.load('400 18px Galmuri11'),document.fonts.load('700 18px Galmuri11')]);await document.fonts.ready;}catch(_){}
-    return html2canvas(card,{scale:2,backgroundColor:'#F3F1E8',logging:false,scrollX:0,scrollY:0,width:1600,height:900,windowWidth:1600,windowHeight:900,
+    return html2canvas(card,{scale:2,backgroundColor:'#F0F0ED',logging:false,scrollX:0,scrollY:0,width:1600,height:900,windowWidth:1600,windowHeight:900,
       onclone:(doc)=>{
         doc.querySelectorAll('body > style, body > link').forEach(n=>doc.head.appendChild(n));
         const c=doc.getElementById('card');c.style.transform='none';c.style.position='relative';
-        doc.documentElement.style.padding='0';doc.body.style.margin='0';doc.body.style.background='#F3F1E8';
+        doc.documentElement.style.padding='0';doc.body.style.margin='0';doc.body.style.background='#F0F0ED';
         doc.body.replaceChildren(c);
         c.querySelectorAll('input').forEach(inp=>{const o=document.getElementById(inp.id);const d=doc.createElement('div');d.className=inp.className+' as-text';d.textContent=o?o.value:'';d.style.justifyContent=getComputedStyle(o||inp).textAlign==='center'?'center':'flex-start';inp.replaceWith(d);});
       }});
