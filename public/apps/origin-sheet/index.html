@@ -180,9 +180,7 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
 /* taskbar */
 .task{position:absolute;left:0;top:856px;width:1600px;height:44px;background:var(--ink);display:flex;align-items:center;gap:16px;padding:0 44px}
 .task .start{display:flex;align-items:center;gap:8px;height:30px;padding:0 12px;background:var(--blue);color:#fff;font:700 18px/1 var(--px);border:2px solid;border-color:#7F97FF #0E1F73 #0E1F73 #7F97FF}
-.task .tick{flex:1;min-width:0;font:400 18px/1 var(--px);color:#fff;white-space:nowrap;overflow:hidden}
-.task .tick i{font-style:normal;color:var(--orange)}
-.task .clock{height:30px;display:flex;align-items:center;gap:8px;padding:0 12px;font:400 18px/1 var(--px);color:#fff;border:2px solid;border-color:#000 #55565C #55565C #000}
+.task .clock{margin-left:auto;height:30px;display:flex;align-items:center;gap:8px;padding:0 12px;font:400 18px/1 var(--px);color:#fff;border:2px solid;border-color:#000 #55565C #55565C #000}
 
 /* export overlay */
 .ov{position:fixed;inset:0;z-index:40;background:rgba(23,24,28,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:calc(20px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
@@ -314,7 +312,6 @@ body{background:var(--cream);color:var(--ink);font-family:var(--px);word-break:k
 
         <div class="task">
           <span class="start"><span data-pix="spark" data-s="2" data-c="w"></span>시작</span>
-          <span class="tick"><i>■</i> 빈칸을 채워 트친소에 사용해 주세요 · 감응자 교류 등록서 · THE ORIGIN</span>
           <span class="clock"><span data-pix="warn" data-s="1"></span>2053.03.03 08:40</span>
         </div>
       </div>
