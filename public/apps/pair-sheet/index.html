@@ -60,6 +60,13 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
 @container sheet (max-width:1000px){.sheet.c3 .grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @container sheet (max-width:700px){.grid{grid-template-columns:minmax(0,1fr)!important}}
 .sf{margin-top:34px;position:relative}
+/* 아주 작은 제작 표기 */
+.credit{margin-top:18px;text-align:right;font-size:10px;line-height:1;letter-spacing:.1em;opacity:.55}
+.skin-bordeaux .credit{font:italic 500 11px/1 "Playfair Display",serif;letter-spacing:.04em}
+.skin-archive .credit,.skin-y2k .credit{font-family:"JetBrains Mono",monospace}
+.skin-composition .credit{font-family:"Archivo",sans-serif;font-weight:600}
+.skin-editorial .credit{font-family:"Noto Serif KR",serif}
+.skin-onebit .credit{font:400 12px/1 Galmuri11,monospace;letter-spacing:.04em}
 
 /* 카드 공통 */
 .pair{position:relative;min-width:0}
@@ -163,7 +170,6 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
 .skin-composition .c-l{flex:1;min-width:0}
 .skin-composition .h-title{font:900 60px/1.1 "Archivo","Noto Sans KR",sans-serif;font-stretch:115%;color:#4F7DB3;letter-spacing:-.01em}
 .skin-composition .c-k{display:flex;align-items:center;gap:10px;font:800 13px/1 "Archivo",sans-serif;font-stretch:125%;letter-spacing:.06em;color:#4F7DB3;margin-top:10px}
-.skin-composition .c-t{font:400 11px/1.6 "Noto Sans KR",sans-serif;margin-top:8px;opacity:.85}
 .skin-composition .c-r{display:flex;align-items:center;gap:10px;flex:none;font:500 22px/1 "Archivo",sans-serif;color:#4F7DB3}
 .skin-composition .c-box{background:#4F7DB3;color:#FBF6EC;font:700 14px/1 "Archivo",sans-serif;padding:6px 7px}
 .skin-composition .pair{background:#FBF6EC;border-radius:6px;padding:20px 22px 22px;overflow:hidden;box-shadow:0 1px 0 rgba(0,0,0,.05)}
@@ -318,6 +324,7 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
       <header class="sh" id="sh"></header>
       <div class="grid" id="grid"></div>
       <footer class="sf" id="sf"></footer>
+      <div class="credit">made by. PAW0w0</div>
     </div>
   </div>
 
@@ -367,14 +374,14 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
       x:()=>'//',wl:()=>'WORK //',
       bar:i=>`<span class="p-lab">CODE_${String(i+1).padStart(3,'0')} //</span>`,
       deco:(i,v)=>barcode(74,18,v.fg,i*31+7),
-      head:(t,n)=>`<div class="a-h"><div class="a-l"><div class="a-k">ARCHIVE LOG // DREAM PAIRS</div>${title(t,'Pair Daily')}<div class="a-range">_01—${nn(n-1)}</div></div><div class="a-r">${barcode(120,26,'#2B2A26',3)}<span>FILE_01//</span><span>Pairs · Dreams · Archive</span></div></div>`,
+      head:(t,n)=>`<div class="a-h"><div class="a-l"><div class="a-k">PAIRS ARCHIVE LOG</div>${title(t,'Pair Daily')}<div class="a-range">_01—${nn(n-1)}</div></div><div class="a-r">${barcode(120,26,'#2B2A26',3)}<span>FILE_01//</span><span>Pairs · Dreams · Archive</span></div></div>`,
       foot:n=>`<span>FILE_01//</span><span>${nn(n-1)} RECORDS</span>`},
     composition:{label:'Composition',sw:['#5B86BD','#E3A2B1','#9FAE8E'],bg:'#EEE7D9',
       cyc:[{c:'#5B86BD'},{c:'#E3A2B1'},{c:'#9FAE8E'},{c:'#A596D2'},{c:'#C29F7E'},{c:'#EC9A80'},{c:'#8BB1B5'}],
       x:(i,v)=>star(18,v.c),wl:()=>star(10,'#8B857B'),we:()=>star(10,'#8B857B'),
       bar:(i,v)=>`<span class="p-lab">COMPOSITION · ${nn(i)}</span>${star(14,v.c)}`,
       blob:i=>`s${i%3}`,
-      head:(t,n)=>`<div class="c-h"><div class="c-l">${title(t,'MY PAIRS')}<div class="c-k">${star(12,'#4F7DB3')}COMPOSITION</div><div class="c-t">A pair is a quiet kind of composition.</div></div><div class="c-r"><span class="c-box">${nn(n-1)}</span>PAIRS</div></div>`,
+      head:(t,n)=>`<div class="c-h"><div class="c-l">${title(t,'MY PAIRS')}<div class="c-k">${star(12,'#4F7DB3')}COMPOSITION</div></div><div class="c-r"><span class="c-box">${nn(n-1)}</span>PAIRS</div></div>`,
       foot:n=>`${star(10,'#8B857B')}<span>DREAM PAIRS · COMPOSITION · ${nn(n-1)}</span>${star(10,'#8B857B')}`},
     editorial:{label:'Editorial',sw:['#2A2926','#EAE6DD','#8B877E'],bg:'#E2DED4',
       cyc:[{}],x:()=>'',wl:()=>'작품',
