@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>드림 페어 정리표 — PAWCAT</title>
+<title>페어 정리표 — PAWCAT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,500&display=swap">
@@ -300,7 +300,7 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
 <div class="wrap">
   <div class="top">
     <div>
-      <h1>드림 페어 정리표</h1>
+      <h1>페어 정리표</h1>
       <p>페어명·캐릭터·작품을 적고 사진을 올리면 한 장의 이미지로 저장돼요. <b>＋</b> 칸을 누를 때마다 페어가 하나씩 늘어나요. 사진은 칸을 눌러 올리고, 올린 뒤에는 끌어서 위치를 맞출 수 있어요.</p>
     </div>
     <div class="acts">
@@ -382,7 +382,7 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
       bar:(i,v)=>`<span class="p-lab">COMPOSITION · ${nn(i)}</span>${star(14,v.c)}`,
       blob:i=>`s${i%3}`,
       head:(t,n)=>`<div class="c-h"><div class="c-l">${title(t,'MY PAIRS')}<div class="c-k">${star(12,'#4F7DB3')}COMPOSITION</div></div><div class="c-r"><span class="c-box">${nn(n-1)}</span>PAIRS</div></div>`,
-      foot:n=>`${star(10,'#8B857B')}<span>DREAM PAIRS · COMPOSITION · ${nn(n-1)}</span>${star(10,'#8B857B')}`},
+      foot:n=>`${star(10,'#8B857B')}<span>PAIRS · COMPOSITION · ${nn(n-1)}</span>${star(10,'#8B857B')}`},
     editorial:{label:'Editorial',sw:['#2A2926','#EAE6DD','#8B877E'],bg:'#E2DED4',
       cyc:[{}],x:()=>'',wl:()=>'작품',
       bar:i=>`<span class="p-lab">Pair ${nn(i)}</span>`,
@@ -399,7 +399,7 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
       cyc:[{}],x:()=>'×',wl:()=>'작품:',dz:true,
       bar:i=>`<span class="o-box"></span><span class="o-st">${hlines(600,'#000')}</span><span class="p-lab">Pair_${nn(i)}</span><span class="o-st">${hlines(600,'#000')}</span><span class="o-box"></span>`,
       head:(t,n)=>`<div class="o-mb"><span>◆</span><span>File</span><span>Edit</span><span>View</span><span>Special</span><span class="o-cl">${n} PAIRS</span></div>${title(t,'MY PAIRS')}<div class="o-k">pair archive · 1-bit</div>`,
-      foot:n=>`<span class="o-clock">■ ${nn(n-1)} PAIRS</span><span class="o-clock">♡ DREAM</span>`},
+      foot:n=>`<span class="o-clock">■ ${nn(n-1)} PAIRS</span>`},
   };
   function title(v,ph){return `<input class="h-title" id="title" maxlength="24" autocomplete="off" aria-label="정리표 제목" placeholder="${esc(ph)}" value="${esc(v)}">`;}
 
