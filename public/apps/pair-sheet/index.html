@@ -284,15 +284,19 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
 .skin-onebit .add{border-radius:0}
 /* 좁은 화면: 큰 제목 줄이기 */
 @container sheet (max-width:520px){
-  .sheet .h-title{font-size:32px!important;height:auto!important}
+  .sheet .h-title{height:auto!important}
   .skin-archive .a-h,.skin-composition .c-h{flex-wrap:wrap}
   .skin-archive .a-l,.skin-composition .c-l{flex-basis:100%}
   .skin-archive .a-r{align-items:flex-start;text-align:left}
-  .skin-editorial .h-title{font-size:24px!important}
   .skin-editorial .e-row{grid-template-columns:40px minmax(0,1fr) 44px}
   .skin-editorial .e-no{font-size:28px}
   .skin-editorial .e-h{padding:18px 18px 20px}
-  .skin-y2k .h-title{font-size:18px!important}
+}
+/* 한 줄에 1개처럼 폭이 좁을 때: 머리말 오른쪽 상자를 제목 아래로 내린다 */
+@container sheet (max-width:700px){
+  .skin-archive .a-h,.skin-composition .c-h{flex-wrap:wrap}
+  .skin-archive .a-l,.skin-composition .c-l{flex-basis:100%}
+  .skin-archive .a-r{align-items:flex-start;text-align:left}
 }
 </style>
 </head>
@@ -386,7 +390,7 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
     editorial:{label:'Editorial',sw:['#2A2926','#EAE6DD','#8B877E'],bg:'#E2DED4',
       cyc:[{}],x:()=>'',wl:()=>'작품',
       bar:i=>`<span class="p-lab">Pair ${nn(i)}</span>`,
-      head:(t,n)=>`<div class="e-h"><div class="r3"></div><div class="e-row"><span class="e-no">01</span>${title(t,'Dream Pairs')}<span class="e-side">Dream<br>Pairs</span></div><div class="r1"></div><div class="e-sub">드림 · 페어 정리 — ${n} pairs</div><div class="r3"></div></div>`,
+      head:(t,n)=>`<div class="e-h"><div class="r3"></div><div class="e-row"><span class="e-no">01</span>${title(t,'Dream Pairs')}<span class="e-side">Dream<br>Pairs</span></div><div class="r1"></div><div class="e-sub">드림 · 페어 정리 — ${n} ${n===1?'pair':'pairs'}</div><div class="r3"></div></div>`,
       foot:()=>''},
     y2k:{label:'Y2K Pastel',sw:['#F7C6D6','#DCC9F2','#C3E4F4'],bg:'#F4EEE2',
       cyc:[{g1:'#F7C6D6',g2:'#DCC9F2',p1:'#F7B7CF',p2:'#B79BE0'},{g1:'#C3E4F4',g2:'#E6D3F5',p1:'#A9DDF2',p2:'#8FB2E8'},{g1:'#FBEBB5',g2:'#F7C6D6',p1:'#FFE08A',p2:'#F2A2BF'},{g1:'#CDEFD8',g2:'#C3E4F4',p1:'#B6EBC8',p2:'#86C8E6'}],
@@ -418,7 +422,11 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
   const W=c=>96+c*440+(c-1)*28; // 저장 이미지 가로 폭
   function applyFrame(){sheet.className=`sheet skin-${S.skin} c${S.cols}`;sheet.style.setProperty('--W',W(S.cols)+'px');sheet.style.setProperty('--cols',S.cols);}
   function renderHead(){const sk=SKINS[S.skin],n=S.pairs.length;$('#sh').innerHTML=sk.head(S.title,n);$('#sf').innerHTML=sk.foot(n);
-    $('#title').addEventListener('input',e=>{S.title=e.target.value;save();});}
+    const t=$('#title');t.addEventListener('input',e=>{S.title=e.target.value;fitTitle();save();});fitTitle();}
+  /* 제목이 칸보다 길면 글자 크기를 줄여 한 줄에 맞춘다 (비어 있으면 예시 제목 기준) */
+  function shrink(el,win){el.style.fontSize='';let fs=parseFloat(win.getComputedStyle(el).fontSize),k=0;
+    while(el.scrollWidth>el.clientWidth+1&&fs>16&&k<60){fs-=2;el.style.fontSize=fs+'px';k++;}}
+  function fitTitle(){const t=$('#title');if(!t)return;const v=t.value;if(!v)t.value=t.placeholder;shrink(t,window);if(!v)t.value='';}
   function slotHTML(i,k){const sk=SKINS[S.skin];return `<div class="slot" data-i="${i}" data-k="${k}" tabindex="0" role="button" aria-label="${k==='ia'?'A':'B'} 캐릭터 사진 올리기"><div class="ph">${sk.dz?`<span class="dz"></span>`:''}<b>${k==='ia'?'A':'B'}</b><em data-html2canvas-ignore>사진 올리기</em></div><button class="rm" data-html2canvas-ignore aria-label="사진 지우기">×</button></div>`;}
   function cardHTML(p,i){
     const sk=SKINS[S.skin],v=sk.cyc[i%sk.cyc.length];
@@ -527,7 +535,8 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
         // 입력칸을 글자로 바꾼다. 높이는 화면의 칸과 같게, 제목이 비어 있으면 예시 제목을 쓴다
         const live=[...sheet.querySelectorAll('input')];
         c.querySelectorAll('input').forEach((inp,k)=>{const o=live[k]||inp,cs=getComputedStyle(o);const d=doc.createElement('div');d.className=inp.className+' as-text';
-          d.textContent=o.value||(o.classList.contains('h-title')?o.placeholder:'');d.style.height=cs.height;d.style.justifyContent=cs.textAlign==='center'?'center':'flex-start';inp.replaceWith(d);});
+          d.textContent=o.value||(o.classList.contains('h-title')?o.placeholder:'');d.style.height=cs.height;d.style.justifyContent=cs.textAlign==='center'?'center':'flex-start';inp.replaceWith(d);
+          if(d.classList.contains('h-title'))shrink(d,doc.defaultView);});
       }});
   }
   $('#save').onclick=async()=>{
@@ -544,7 +553,8 @@ body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--ui);word-break
   };
 
   render();
-  let rz=null;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(fillDither,150);});
+  let rz=null;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{fillDither();fitTitle();},150);});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTitle);
 })();
 </script>
 </body></html>
