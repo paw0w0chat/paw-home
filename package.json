@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@vercel/blob": "^2.8.2",
+    "aws4fetch": "^1.0.20",
     "firebase": "^13.2.0",
     "jose": "^6.2.15",
     "next": "16.4.5",

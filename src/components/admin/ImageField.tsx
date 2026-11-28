@@ -9,7 +9,7 @@ const ACCEPT = {
   audio: "audio/mpeg,audio/mp4,audio/x-m4a,audio/wav,audio/x-wav,audio/ogg,.mp3,.m4a,.wav,.ogg",
 };
 
-/** 이미지(또는 첨부 파일) 칸: Vercel Blob에 올리거나, 이미 있는 주소를 붙여 넣는다 */
+/** 이미지(또는 첨부 파일) 칸: Cloudflare R2에 올리거나, 이미 있는 주소를 붙여 넣는다 */
 export function ImageField({ id, value, onChange, folder, token, kind = "image" }: {
   id: string;
   kind?: "image" | "file" | "audio";
